@@ -1,0 +1,709 @@
+/**
+ * Estilos para el Softphone WebRTC
+ * Archivo: assets/css/softphone-web.css
+ */
+
+/* Contenedor principal del softphone - Reducido 50% */
+#webrtc-softphone {
+    min-height: 200px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.7rem;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Header del softphone - Reducido 50% */
+.softphone-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 5px 7.5px;
+    border-radius: 4px 4px 0 0;
+    margin: -7.5px -7.5px 7.5px -7.5px;
+    box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
+}
+
+.softphone-header h3 {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.softphone-header h3 i {
+    font-size: 0.85rem;
+    animation: pulse-icon 2s ease-in-out infinite;
+}
+
+@keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Body del softphone */
+.softphone-body {
+    padding: 0;
+}
+
+/* Estado de conexión - Reducido 50% */
+.softphone-status {
+    margin-bottom: 6px;
+    padding: 5px;
+    background: #f9fafb;
+    border-radius: 3px;
+    border: 1px solid #e5e7eb;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    display: inline-block;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.status-dot.disconnected {
+    background: #ef4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    animation: pulse-disconnected 2s infinite;
+}
+
+.status-dot.connecting {
+    background: #f59e0b;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    animation: pulse-connecting 1.5s infinite;
+}
+
+.status-dot.connected {
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: pulse-connected 2s infinite;
+}
+
+.status-dot.in-call {
+    background: #3b82f6;
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    animation: pulse-call 1s infinite;
+}
+
+@keyframes pulse-disconnected {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+@keyframes pulse-connecting {
+    0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+        transform: scale(1.1);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse-connected {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+@keyframes pulse-call {
+    0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+/* Display del número - Reducido 50% y con overflow controlado */
+.number-input-container {
+    margin-bottom: 6px;
+}
+
+.number-display {
+    width: 100%;
+    max-width: 100%;
+    padding: 5px 6px;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border: 1px solid #d1d5db;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    color: #1f2937;
+    min-height: 25px;
+    max-height: 25px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    outline: none;
+    cursor: text;
+    font-family: inherit;
+}
+
+/* Estilos específicos para input */
+.number-display[type="text"] {
+    display: block;
+    caret-color: #3b82f6; /* Color del cursor */
+}
+
+.number-display::placeholder {
+    color: #9ca3af;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.number-display:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1.5px rgba(59, 130, 246, 0.1), inset 0 1px 2px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+}
+
+.number-display:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1.5px rgba(59, 130, 246, 0.1), inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.number-display:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    color: #6b7280;
+}
+
+/* Dialpad - Reducido 50% especialmente los botones */
+.dialpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+    margin-left: 22px;
+}
+
+.dialpad-btn {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 1.56rem;
+    font-weight: 700;
+    color: #1f2937;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0.5px 1.5px rgba(0,0,0,0.1);
+    min-height: 28px;
+    max-height: 28px;
+}
+
+.dialpad-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.dialpad-btn:active::before {
+    width: 75px;
+    height: 75px;
+}
+
+.dialpad-btn:hover {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-color: #3b82f6;
+    transform: translateY(-0.5px);
+    box-shadow: 0 1px 4px rgba(59, 130, 246, 0.2);
+}
+
+.dialpad-btn:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow: 0 0.5px 1.5px rgba(0,0,0,0.1);
+}
+
+.dialpad-btn span:first-child {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.dialpad-btn-letter {
+    font-size: 0.4rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin-top: 1px;
+    letter-spacing: 0.25px;
+}
+
+/* Botones de acción - Reducido 50% */
+.action-buttons {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 4px 6px;
+    border: none;
+    border-radius: 3px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.action-btn:active::after {
+    width: 100px;
+    height: 100px;
+}
+
+.action-btn i {
+    font-size: 0.7rem;
+}
+
+.action-btn.delete-btn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.action-btn.delete-btn:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.action-btn.delete-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn.call-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    animation: pulse-call-btn 2s ease-in-out infinite;
+}
+
+.action-btn.call-btn:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    animation: none;
+}
+
+.action-btn.call-btn:active {
+    transform: translateY(0);
+}
+
+@keyframes pulse-call-btn {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+    }
+}
+
+.action-btn.hangup-btn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+.action-btn.hangup-btn:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+    animation: none;
+}
+
+.action-btn.hangup-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn.transfer-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.action-btn.transfer-btn:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+}
+
+.action-btn.transfer-btn:active {
+    transform: translateY(0);
+}
+
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* Información de llamada - Reducido 50% */
+.call-info {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border: 1px solid #3b82f6;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 6px;
+    text-align: center;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.call-info-number {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 3px;
+}
+
+.call-info-duration {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #3b82f6;
+    margin-bottom: 2px;
+    font-family: 'Courier New', monospace;
+}
+
+.call-info-status {
+    font-size: 0.6rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Modales del softphone */
+.softphone-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.3s ease-out;
+    backdrop-filter: blur(4px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    animation: slideUp 0.3s ease-out;
+    overflow: hidden;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-body p {
+    margin: 0 0 15px 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.modal-btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.modal-btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.modal-btn-primary:active {
+    transform: translateY(0);
+}
+
+.modal-btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+    border: 2px solid #e5e7eb;
+}
+
+.modal-btn-secondary:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    transform: translateY(-2px);
+}
+
+.modal-btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dialpad {
+        gap: 8px;
+    }
+    
+    .dialpad-btn {
+        font-size: 1.3rem;
+    }
+    
+    .action-btn {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Efectos adicionales */
+.softphone-container {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.softphone-container:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Animación de entrada para el softphone */
+#webrtc-softphone {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para columna del softphone */
+.columna-softphone {
+    position: sticky;
+    top: 80px;
+    height: fit-content;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
+.softphone-container {
+    background: white;
+    border-radius: 6px;
+    padding: 7.5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* ========== Embed en vistas (ej. asesor_gestionar) ========== */
+.seccion-softphone-wrapper {
+    background: white;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+    margin-bottom: 20px;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.webrtc-softphone-panel.inline {
+    position: relative !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.webrtc-softphone-panel.inline.hidden {
+    display: none !important;
+}
+

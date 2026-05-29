@@ -1,0 +1,241 @@
+/* ===== Login estilo AICRM: fondo + tarjeta glass, sin muñeco ===== */
+:root {
+    --accent-blue: #3b82f6;
+    --text-white: #ffffff;
+    --input-bg: #ffffff;
+    --label-color: #cbd5e1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
+body.login-page {
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+/* Fondo: imagen a pantalla completa + gradientes suaves encima */
+.login-layout {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-image: url('../../img/fondo_login.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.login-layout::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(76, 53, 193, 0.25) 0%, transparent 45%),
+        radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 45%);
+    pointer-events: none;
+}
+
+/* Tarjeta con efecto glass */
+.login-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 950px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Lado izquierdo: visual (logo + burbuja, sin muñeco) --- */
+.visual-side {
+    flex: 1;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+}
+
+.welcome-bubble {
+    position: absolute;
+    top: 40px;
+    left: 30px;
+    width: 160px;
+    height: 100px;
+    background: #0E1235;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+    z-index: 10;
+    overflow: hidden;
+}
+
+/* Imagen T&S superpuesta dentro de la burbuja, sin alargar la vista */
+.welcome-bubble-img {
+    width: 210px;
+    height: 240px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+
+.bubble-line {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.bubble-line.short {
+    width: 50%;
+}
+
+.bubble-line:last-child {
+    margin-bottom: 0;
+}
+
+.visual-logo {
+    max-width: 488px;
+    max-height: 419px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* --- Lado derecho: formulario --- */
+.form-side {
+    flex: 1;
+    background: transparent;
+    padding: 60px;
+    color: var(--text-white);
+}
+
+/* Logo del formulario (línea 24 - editable: tamaño, margen, alineación) */
+.form-logo {
+    display: block;
+    max-width: 287px;
+    max-height: 129px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 24px;
+    margin-inline: auto;
+}
+
+.login-alert {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #fecaca;
+}
+
+.field-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.field-label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: var(--label-color);
+}
+
+.field-input {
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: none;
+    background: var(--input-bg);
+    font-size: 1rem;
+    color: #333;
+    outline: none;
+}
+
+.field-input:focus {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 0;
+}
+
+.btn-signin {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    margin-bottom: 20px;
+}
+
+.btn-signin:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .login-card {
+        flex-direction: column;
+        max-width: 450px;
+    }
+
+    .visual-side {
+        padding: 40px 20px 20px;
+    }
+
+    .welcome-bubble {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-bottom: 20px;
+        width: 160px;
+        height: 100px;
+        margin-inline: auto;
+    }
+
+    .form-side {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-layout {
+        padding: 15px;
+    }
+
+    .form-side {
+        padding: 24px;
+    }
+}
