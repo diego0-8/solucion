@@ -290,7 +290,7 @@
 .action-card:hover {
     transform: translateY(-3px);
     border-color: var(--primary-color);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 192, 225, 0.3);
 }
 
 .action-card i {
@@ -492,7 +492,7 @@
 .btn-primary:hover {
     background-color: var(--active-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 192, 225, 0.4);
 }
 
 /* Lista de clientes */
@@ -640,7 +640,7 @@
 .btn-manage:hover {
     background-color: var(--active-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 192, 225, 0.4);
 }
 
 /* Contenedor de botones de acción */
@@ -768,14 +768,14 @@
     background: var(--primary-color);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 192, 225, 0.3);
 }
 
 .page-link.active {
     background: var(--primary-color);
     border-color: var(--primary-color);
     color: white;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 192, 225, 0.3);
 }
 
 .page-link.first,
@@ -1286,7 +1286,7 @@
 }
 
 .cita-card.agendada {
-    border-left-color: #007bff;
+    border-left-color: #00c0e1;
 }
 
 .cita-card.confirmada {
@@ -1638,7 +1638,7 @@
     padding: 20px;
     background: #f8f9fa;
     border-radius: 10px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid #00c0e1;
     transition: all 0.3s ease;
 }
 
@@ -1856,7 +1856,7 @@
 .btn-details:hover {
     background-color: var(--active-color);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 192, 225, 0.3);
 }
 
 .btn-details i {
@@ -2181,7 +2181,7 @@
 .btn-manage:hover {
     background: var(--active-color);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 192, 225, 0.3);
 }
 
 /* Estilos para botón de historial en esta sección también */
@@ -2273,7 +2273,7 @@
 .search-loading {
     padding: 20px;
     text-align: center;
-    color: #007bff;
+    color: #00c0e1;
 }
 
 .search-loading i {
@@ -2348,8 +2348,8 @@
 }
 
 .search-input-group input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    border-color: #00c0e1;
+    box-shadow: 0 0 0 2px rgba(0,192,225,0.25);
 }
 
 .search-btn, .clear-btn {
@@ -2362,12 +2362,12 @@
 }
 
 .search-btn {
-    background: #007bff;
+    background: #00c0e1;
     color: white;
 }
 
 .search-btn:hover {
-    background: #0056b3;
+    background: #00a3bd;
 }
 
 .clear-btn {
@@ -2407,7 +2407,7 @@
 
 .btn-gestionar-search {
     padding: 10px 20px;
-    background: #007bff;
+    background: #00c0e1;
     color: white;
     border: none;
     border-radius: 6px;
@@ -2423,9 +2423,9 @@
 }
 
 .btn-gestionar-search:hover {
-    background: #0056b3;
+    background: #00a3bd;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    box-shadow: 0 4px 8px rgba(0,192,225,0.3);
 }
 
 .search-result-name {
@@ -2472,7 +2472,7 @@
 
 .bases-acceso h4 {
     margin-bottom: 10px;
-    color: #007bff;
+    color: #00c0e1;
     font-size: 14px;
 }
 
@@ -2508,7 +2508,7 @@
 
 .filtros-clientes h4 {
     margin: 0 0 15px 0;
-    color: #007bff;
+    color: #00c0e1;
     font-size: 16px;
 }
 
@@ -2600,7 +2600,7 @@
 
 .modal-tiempo-header h3 {
     margin: 0;
-    color: #007bff;
+    color: #00c0e1;
 }
 
 .modal-tiempo-body .reloj-label,
@@ -2616,7 +2616,7 @@
     font-weight: 700;
 }
 
-#reloj-activo { color: #007bff; }
+#reloj-activo { color: #00c0e1; }
 #tiempo-sesion { color: #28a745; }
 
 .btn-pausa-type {
@@ -2642,7 +2642,7 @@
 }
 
 .phone-number {
-    color: #007bff;
+    color: #00c0e1;
     font-weight: 500;
     font-size: 14px;
 }

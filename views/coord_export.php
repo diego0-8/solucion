@@ -86,13 +86,13 @@
                                     <i class="fas fa-calendar-alt"></i> Seleccionar Rango de Fechas
                                 </h5>
                                 <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
-                                    <button onclick="seleccionarRango('hoy')" id="btn-hoy" style="padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,123,255,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+                                    <button onclick="seleccionarRango('hoy')" id="btn-hoy" style="padding: 12px 24px; background: #00c0e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,192,225,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
                                         <i class="fas fa-calendar-day"></i> Hoy
                                     </button>
-                                    <button onclick="seleccionarRango('semana')" id="btn-semana" style="padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,123,255,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+                                    <button onclick="seleccionarRango('semana')" id="btn-semana" style="padding: 12px 24px; background: #00c0e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,192,225,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
                                         <i class="fas fa-calendar-week"></i> Esta Semana
                                     </button>
-                                    <button onclick="seleccionarRango('mes')" id="btn-mes" style="padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,123,255,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+                                    <button onclick="seleccionarRango('mes')" id="btn-mes" style="padding: 12px 24px; background: #00c0e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,192,225,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
                                         <i class="fas fa-calendar-alt"></i> Este Mes
                                     </button>
                                     <button onclick="seleccionarRango('personalizado')" id="btn-personalizado" style="padding: 12px 24px; background: #17a2b8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(23,162,184,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
@@ -118,7 +118,7 @@
 
                             <!-- Botón de Acción -->
                             <div style="text-align: center;">
-                                <button onclick="generarReporte()" style="padding: 15px 40px; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,123,255,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,123,255,0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,123,255,0.3)'">
+                                <button onclick="generarReporte()" style="padding: 15px 40px; background: linear-gradient(135deg, #00c0e1 0%, #00a3bd 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,192,225,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,192,225,0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,192,225,0.3)'">
                                     <i class="fas fa-download"></i> Generar y Descargar Reporte CSV
                                 </button>
                             </div>
@@ -147,13 +147,13 @@
                                     <i class="fas fa-calendar-alt"></i> Seleccionar Rango de Fechas
                                 </h5>
                                 <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
-                                    <button onclick="seleccionarRangoTMO('hoy')" id="btn-tmo-hoy" style="padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,123,255,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+                                    <button onclick="seleccionarRangoTMO('hoy')" id="btn-tmo-hoy" style="padding: 12px 24px; background: #00c0e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,192,225,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
                                         <i class="fas fa-calendar-day"></i> Hoy
                                     </button>
-                                    <button onclick="seleccionarRangoTMO('semana')" id="btn-tmo-semana" style="padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,123,255,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+                                    <button onclick="seleccionarRangoTMO('semana')" id="btn-tmo-semana" style="padding: 12px 24px; background: #00c0e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,192,225,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
                                         <i class="fas fa-calendar-week"></i> Esta Semana
                                     </button>
-                                    <button onclick="seleccionarRangoTMO('mes')" id="btn-tmo-mes" style="padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,123,255,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
+                                    <button onclick="seleccionarRangoTMO('mes')" id="btn-tmo-mes" style="padding: 12px 24px; background: #00c0e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,192,225,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
                                         <i class="fas fa-calendar-alt"></i> Este Mes
                                     </button>
                                     <button onclick="seleccionarRangoTMO('personalizado')" id="btn-tmo-personalizado" style="padding: 12px 24px; background: #17a2b8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(23,162,184,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
@@ -176,7 +176,7 @@
 
                             <!-- Botón de Acción -->
                             <div style="text-align: center;">
-                                <button onclick="generarReporteTMO()" style="padding: 15px 40px; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,123,255,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,123,255,0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,123,255,0.3)'">
+                                <button onclick="generarReporteTMO()" style="padding: 15px 40px; background: linear-gradient(135deg, #00c0e1 0%, #00a3bd 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 16px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,192,225,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,192,225,0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,192,225,0.3)'">
                                     <i class="fas fa-download"></i> Generar y Descargar Reporte TMO CSV
                                 </button>
                             </div>

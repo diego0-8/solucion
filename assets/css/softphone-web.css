@@ -86,7 +86,7 @@
 }
 
 .status-dot.connected {
-    background: #10b981;
+    background: #00c0e1;
     box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
     animation: pulse-connected 2s infinite;
 }
@@ -343,14 +343,14 @@
 }
 
 .action-btn.call-btn {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #00c0e1 0%, #00a3bd 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     animation: pulse-call-btn 2s ease-in-out infinite;
 }
 
 .action-btn.call-btn:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    background: linear-gradient(135deg, #00a3bd 0%, #047857 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
     animation: none;

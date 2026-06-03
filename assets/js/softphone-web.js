@@ -787,7 +787,7 @@ class WebRTCSoftphone {
         const customSDHFactory = createCustomSessionDescriptionHandlerFactory(this, rtcConfig);
 
         // LOG: Mostrar URL de conexión WebSocket
-        console.log('%c🔌 [WebSocket] Conectando a: ' + this.config.wss_server, 'background: #007bff; color: white; font-weight: bold; padding: 5px 10px; border-radius: 5px; font-size: 14px;');
+        console.log('%c🔌 [WebSocket] Conectando a: ' + this.config.wss_server, 'background: #00c0e1; color: white; font-weight: bold; padding: 5px 10px; border-radius: 5px; font-size: 14px;');
         
         this.userAgent = new SIP.UserAgent({
             uri: userURI,
@@ -1422,7 +1422,7 @@ class WebRTCSoftphone {
 
         try {
             // LOG PÚBLICO: Mostrar codecs que se usarán en la llamada
-            console.log('%c🚀 [INICIANDO LLAMADA] ' + number, 'background: #007bff; color: white; font-weight: bold; padding: 5px 10px; border-radius: 5px; font-size: 14px;');
+            console.log('%c🚀 [INICIANDO LLAMADA] ' + number, 'background: #00c0e1; color: white; font-weight: bold; padding: 5px 10px; border-radius: 5px; font-size: 14px;');
             console.log('%c📞 Codecs configurados: G.711 A-law (PCMA) y G.711 μ-law (PCMU)', 'background: #28a745; color: white; padding: 3px 8px; border-radius: 3px; font-size: 12px;');
             
             if (this.config.debug_mode) {
@@ -1972,7 +1972,7 @@ class WebRTCSoftphone {
             };
 
             // LOG PÚBLICO: Mostrar codecs al aceptar llamada entrante
-            console.log('%c📞 [ACEPTANDO LLAMADA ENTRANTE]', 'background: #007bff; color: white; font-weight: bold; padding: 5px 10px; border-radius: 5px; font-size: 14px;');
+            console.log('%c📞 [ACEPTANDO LLAMADA ENTRANTE]', 'background: #00c0e1; color: white; font-weight: bold; padding: 5px 10px; border-radius: 5px; font-size: 14px;');
             console.log('%c📞 Codecs configurados: G.711 A-law (PCMA) y G.711 μ-law (PCMU)', 'background: #28a745; color: white; padding: 3px 8px; border-radius: 3px; font-size: 12px;');
             
             // Aceptar la llamada

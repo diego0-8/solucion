@@ -341,7 +341,7 @@
     <div id="modal-tiempo-sesion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
         <div style="background: white; padding: 30px; border-radius: 15px; min-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; color: #007bff;">
+                <h3 style="margin: 0; color: #00c0e1;">
                     <i class="fas fa-clock"></i> Tiempo de Sesión
                 </h3>
                 <button onclick="toggleTiempoModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
@@ -350,7 +350,7 @@
             <div style="display: flex; flex-direction: column; gap: 15px;">
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
                     <span style="display: block; margin-bottom: 5px; color: #666; font-size: 13px;">Hora Actual</span>
-                    <span id="reloj-activo" style="font-size: 20px; font-weight: 700; color: #007bff;">--:-- --</span>
+                    <span id="reloj-activo" style="font-size: 20px; font-weight: 700; color: #00c0e1;">--:-- --</span>
                 </div>
                 
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
@@ -388,7 +388,7 @@
             <i class="fas fa-clock" style="font-size: 48px; color: #ffc107; margin-bottom: 20px;"></i>
             <h3 style="margin: 0 0 10px 0; color: #333;">En Pausa</h3>
             <p style="margin: 0 0 20px 0; color: #666;" id="tipo-pausa-texto">Break de 30 minutos</p>
-            <div style="font-size: 32px; font-weight: 700; color: #007bff; margin-bottom: 20px;">
+            <div style="font-size: 32px; font-weight: 700; color: #00c0e1; margin-bottom: 20px;">
                 <span class="tiempo-pausa">30:00</span>
             </div>
             <button onclick="mostrarModalVerificacion()" class="btn btn-primary" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
@@ -400,7 +400,7 @@
     <!-- Modal de Verificación de Contraseña -->
     <div id="modal-verificacion-contrasena" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10002; justify-content: center; align-items: center;">
         <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-            <i class="fas fa-lock" style="font-size: 48px; color: #007bff; margin-bottom: 20px;"></i>
+            <i class="fas fa-lock" style="font-size: 48px; color: #00c0e1; margin-bottom: 20px;"></i>
             <h3 style="margin: 0 0 10px 0; color: #333;">Verificación de Contraseña</h3>
             <p style="margin: 0 0 20px 0; color: #666;">Ingrese su contraseña para reanudar la sesión</p>
             
@@ -432,7 +432,7 @@
             <i class="fas fa-stopwatch" style="font-size: 48px; color: #6610f2; margin-bottom: 20px;"></i>
             <h3 style="margin: 0 0 10px 0; color: #333;">Actividad Extra</h3>
             <p style="margin: 0 0 20px 0; color: #666;">En progreso...</p>
-            <div style="font-size: 32px; font-weight: 700; color: #007bff; margin-bottom: 20px;">
+            <div style="font-size: 32px; font-weight: 700; color: #00c0e1; margin-bottom: 20px;">
                 <span id="tiempo-actividad-extra">00:00:00</span>
             </div>
             <button onclick="finalizarActividadExtra()" class="btn btn-primary" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">

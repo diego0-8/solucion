@@ -2193,7 +2193,7 @@ function mostrarAsesoresEnModal(asesores, baseId, baseNombre) {
         <tr data-asesor-cedula="${cedula}">
             <td>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #007bff); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #00c0e1); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
                         ${inicial}
                     </div>
                     <strong>${nombre}</strong>

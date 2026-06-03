@@ -3,13 +3,13 @@
 
 :root {
     --sidebar-width: 80px;
-    --primary-color: #007bff;
-    --primary-hover: #0056b3;
+    --primary-color: #00c0e1;
+    --primary-hover: #00a3bd;
     --secondary-color: #6c757d;
     --background-color: #f8f9fa;
     --sidebar-color: #7f33cf;
     --accent-color: #28a745;
-    --active-color: #0056b3;
+    --active-color: #0088a3;
     --text-light: #f8f9fa;
     --text-dark: #333;
     --border-color: #ddd;
@@ -395,7 +395,7 @@ body > .gestion-container {
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 192, 225, 0.1);
 }
 
 /* Tablas comunes */
@@ -754,7 +754,7 @@ body > .gestion-container {
 }
 
 .top-header .user-profile:hover {
-    background: rgba(0, 123, 255, 0.08);
+    background: rgba(0, 192, 225, 0.08);
 }
 
 .top-header .user-avatar {

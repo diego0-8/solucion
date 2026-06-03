@@ -1077,7 +1077,7 @@
                 </div>
 
                 <!-- Resultados del Filtro -->
-                <div id="resultados-filtro" style="display: none; margin-top: 30px; padding-top: 20px; border-top: 2px solid #007bff;">
+                <div id="resultados-filtro" style="display: none; margin-top: 30px; padding-top: 20px; border-top: 2px solid #00c0e1;">
                     <h4>Resultados del Filtro</h4>
                     <div id="resultados-filtro-info" style="padding: 15px; background: #e7f3ff; border-radius: 5px; margin-bottom: 15px;">
                         <p><strong>Clientes encontrados:</strong> <span id="resultados-cantidad">0</span></p>

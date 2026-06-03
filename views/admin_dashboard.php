@@ -1346,7 +1346,7 @@
         }
 
         .modal-header {
-            background: linear-gradient(135deg, #667eea, #007bff);
+            background: linear-gradient(135deg, #667eea, #00c0e1);
             color: white;
             padding: 20px 30px;
             border-radius: 15px 15px 0 0;
@@ -1472,7 +1472,7 @@
         #campos-asesor,
         #campos-asesor-editar {
             background: #f0f7ff;
-            border: 2px solid #007bff;
+            border: 2px solid #00c0e1;
             border-radius: 8px;
             padding: 20px;
             margin: 20px 0;
@@ -1495,7 +1495,7 @@
             content: "📞 Configuración Softphone WebRTC";
             display: block;
             font-weight: 600;
-            color: #007bff;
+            color: #00c0e1;
             margin-bottom: 15px;
             font-size: 0.95rem;
             padding-bottom: 10px;
@@ -1536,7 +1536,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #007bff);
+            background: linear-gradient(135deg, #667eea, #00c0e1);
             color: white;
         }
 
@@ -1740,7 +1740,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #007bff);
+            background: linear-gradient(135deg, #667eea, #00c0e1);
             color: white;
             display: flex;
             align-items: center;
@@ -1830,14 +1830,14 @@
             padding: 6px 12px;
             border-radius: 20px;
             background: #e7f3ff;
-            color: #0056b3;
+            color: #00a3bd;
             font-size: 0.85rem;
             font-weight: 600;
         }
 
         .extension-badge i {
             font-size: 0.75rem;
-            color: #007bff;
+            color: #00c0e1;
         }
 
         .extension-empty {
@@ -2081,7 +2081,7 @@
         }
 
         .stat-item i {
-            color: #007bff;
+            color: #00c0e1;
             font-size: 1.2em;
         }
 
@@ -2128,7 +2128,7 @@
         }
 
         .action-btn i {
-            color: #007bff;
+            color: #00c0e1;
         }
 
         /* Responsive para pantallas medianas */

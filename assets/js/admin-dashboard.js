@@ -145,7 +145,7 @@ function mostrarLoading(elemento) {
                     flex-direction: column;
                     align-items: center;
                     gap: 10px;
-                    color: #007bff;
+                    color: #00c0e1;
                 }
                 .loading-spinner i {
                     font-size: 24px;

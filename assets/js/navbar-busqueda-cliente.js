@@ -111,15 +111,15 @@ function crearModalBusqueda() {
     modal.innerHTML = `
         <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; color: #007bff;">
+                <h3 style="margin: 0; color: #00c0e1;">
                     <i class="fas fa-search"></i> Buscar Cliente
                 </h3>
                 <button onclick="cerrarBusquedaNavbar()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
             </div>
             
             <!-- Base(s) que gestiona el asesor (visible solo para asesores con bases) -->
-            <div id="navbar-bases-gestionando" style="margin-bottom: 16px; padding: 12px; background: #e7f3ff; border-radius: 8px; border-left: 4px solid #007bff;">
-                <div style="font-size: 12px; font-weight: 600; color: #0056b3; margin-bottom: 6px;">
+            <div id="navbar-bases-gestionando" style="margin-bottom: 16px; padding: 12px; background: #e7f3ff; border-radius: 8px; border-left: 4px solid #00c0e1;">
+                <div style="font-size: 12px; font-weight: 600; color: #00a3bd; margin-bottom: 6px;">
                     <i class="fas fa-database"></i> Base(s) que gestionas
                 </div>
                 <div id="navbar-bases-gestionando-lista" style="font-size: 13px; color: #333;">
@@ -136,7 +136,7 @@ function crearModalBusqueda() {
                            style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
                            onkeypress="if(event.key === 'Enter') buscarClienteNavbar();">
                     <button onclick="buscarClienteNavbar()" 
-                            style="padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            style="padding: 12px 20px; background: #00c0e1; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>

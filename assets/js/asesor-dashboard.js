@@ -662,7 +662,7 @@ function mostrarInformacionCliente(cliente) {
         // Mostrar información completa del cliente
         clienteInfo.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h4 style="margin: 0; color: #007bff;">
+                <h4 style="margin: 0; color: #00c0e1;">
                     <i class="fas fa-user"></i> Cliente Seleccionado
                 </h4>
                 <button onclick="cerrarInformacionCliente()" style="background: none; border: none; color: #6c757d; cursor: pointer; font-size: 18px; padding: 5px;">×</button>
@@ -682,7 +682,7 @@ function mostrarInformacionCliente(cliente) {
             </div>
             
             <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="gestionarClienteSeleccionado(${clienteId})" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <button onclick="gestionarClienteSeleccionado(${clienteId})" style="background: #00c0e1; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                     <i class="fas fa-edit"></i> Gestionar
                 </button>
                 <button onclick="llamarClienteSeleccionado(${clienteId})" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
@@ -847,9 +847,9 @@ function mostrarBasesAcceso(bases) {
     
     bases.forEach((base, index) => {
         html += `
-            <div class="base-item" style="padding: 10px; background: #f8f9fa; border-left: 3px solid #007bff; border-radius: 4px;">
+            <div class="base-item" style="padding: 10px; background: #f8f9fa; border-left: 3px solid #00c0e1; border-radius: 4px;">
                 <span style="font-weight: 600; color: #333;">
-                    <i class="fas fa-database" style="color: #007bff;"></i> ${base.nombre_base || base.NOMBRE_BASE || 'Base sin nombre'}
+                    <i class="fas fa-database" style="color: #00c0e1;"></i> ${base.nombre_base || base.NOMBRE_BASE || 'Base sin nombre'}
                 </span>
                 <div style="font-size: 12px; color: #666; margin-top: 5px;">
                     ${base.total_clientes || 0} clientes

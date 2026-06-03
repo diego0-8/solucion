@@ -145,7 +145,7 @@ function seleccionarRango(rango) {
                 btn.style.boxShadow = '0 2px 8px rgba(23,162,184,0.3)';
             } else {
                 // Botones normales - azul
-                btn.style.background = '#007bff';
+                btn.style.background = '#00c0e1';
                 btn.style.boxShadow = 'none';
             }
         }
@@ -272,7 +272,7 @@ function seleccionarRangoTMO(rango) {
                 btn.style.boxShadow = '0 2px 8px rgba(23,162,184,0.3)';
             } else {
                 // Botones normales - azul
-                btn.style.background = '#007bff';
+                btn.style.background = '#00c0e1';
                 btn.style.boxShadow = 'none';
             }
         }

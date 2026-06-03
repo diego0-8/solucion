@@ -186,7 +186,7 @@
                                     <div style="overflow-x: auto;">
                                         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                                             <thead>
-                                                <tr style="background: #007bff; color: white;">
+                                                <tr style="background: #00c0e1; color: white;">
                                                     <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 30px;"></th>
                                                     <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Base de Datos</th>
                                                     <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Clientes</th>
@@ -248,7 +248,7 @@
                                                             $desgloseAcuerdos = $base['desglose_acuerdos'] ?? ['total' => 0, 'cuotas' => 0, 'comite' => 0];
                                                             $clasificacionesLabels = [
                                                                 'ya_pago' => ['label' => 'Ya Pago', 'color' => '#28a745'],
-                                                                'acuerdo_pago' => ['label' => 'Acuerdo de Pago', 'color' => '#007bff'],
+                                                                'acuerdo_pago' => ['label' => 'Acuerdo de Pago', 'color' => '#00c0e1'],
                                                                 'recordatorio' => ['label' => 'Recordatorio', 'color' => '#17a2b8'],
                                                                 'voluntad_pago' => ['label' => 'Voluntad de Pago', 'color' => '#ffc107'],
                                                                 'localizado_sin_acuerdo' => ['label' => 'Localizado Sin Acuerdo', 'color' => '#fd7e14'],
@@ -257,7 +257,7 @@
                                                             ];
                                                             $acuerdosLabels = [
                                                                 'total' => ['label' => 'Acuerdo Pago Total', 'color' => '#28a745'],
-                                                                'cuotas' => ['label' => 'Acuerdo a Largo Plazo (Cuotas)', 'color' => '#007bff'],
+                                                                'cuotas' => ['label' => 'Acuerdo a Largo Plazo (Cuotas)', 'color' => '#00c0e1'],
                                                                 'comite' => ['label' => 'Acuerdo Aprobado Comité', 'color' => '#6f42c1'],
                                                             ];
                                                             ?>
@@ -911,7 +911,7 @@
                         <td style="padding: 12px; color: #666; font-size: 0.9rem;">${fechaFormato}</td>
                         <td style="padding: 12px; text-align: center;">
                             <button onclick="verObservacionesGestion(${index})" style="
-                                background: #007bff;
+                                background: #00c0e1;
                                 color: white;
                                 border: none;
                                 padding: 6px 12px;
@@ -919,7 +919,7 @@
                                 cursor: pointer;
                                 font-size: 0.85rem;
                                 transition: background 0.3s;
-                            " onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+                            " onmouseover="this.style.background='#00a3bd'" onmouseout="this.style.background='#00c0e1'">
                                 <i class="fas fa-eye"></i> Ver
                             </button>
                         </td>
@@ -1079,7 +1079,7 @@
                         <td style="padding: 12px; color: #666; font-size: 0.9rem;">${fechaFormato}</td>
                         <td style="padding: 12px; text-align: center;">
                             <button onclick="verObservacionesGestion(${index})" style="
-                                background: #007bff;
+                                background: #00c0e1;
                                 color: white;
                                 border: none;
                                 padding: 6px 12px;
@@ -1087,7 +1087,7 @@
                                 cursor: pointer;
                                 font-size: 0.85rem;
                                 transition: background 0.3s;
-                            " onmouseover="this.style.background='#0056b3'" onmouseout="this.style.background='#007bff'">
+                            " onmouseover="this.style.background='#00a3bd'" onmouseout="this.style.background='#00c0e1'">
                                 <i class="fas fa-eye"></i> Ver
                             </button>
                         </td>
@@ -1193,8 +1193,8 @@
             // Observaciones
             if (gestion.observaciones) {
                 html += `
-                    <div style="background: white; border-left: 4px solid #007bff; padding: 15px; border-radius: 6px;">
-                        <strong style="color: #007bff;">Observaciones</strong>
+                    <div style="background: white; border-left: 4px solid #00c0e1; padding: 15px; border-radius: 6px;">
+                        <strong style="color: #00c0e1;">Observaciones</strong>
                         <p style="color: #495057; margin-top: 8px; white-space: pre-wrap; word-wrap: break-word;">${gestion.observaciones}</p>
                     </div>
                 `;

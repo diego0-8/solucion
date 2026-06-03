@@ -1299,8 +1299,8 @@ function configurarTelefonos(datosCliente) {
     html += '<div>';
     html += '<label for="telefono-softphone">Llamar:</label>';
     html += '<div style="position: relative; width: 100%; box-sizing: border-box;">';
-    html += '<input type="text" id="telefono-softphone" readonly class="telefono-softphone-input" style="width: 100%; padding: 10px 40px 10px 12px; border: 2px solid #007bff; border-radius: 4px; font-size: 14px; background: #f8f9fa; font-weight: 600; color: #007bff; cursor: pointer; transition: all 0.3s ease; box-sizing: border-box;" placeholder="Haz clic para copiar al softphone" title="Haz clic para copiar este número al softphone">';
-    html += '<i class="fas fa-phone-alt" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #007bff; pointer-events: none;"></i>';
+    html += '<input type="text" id="telefono-softphone" readonly class="telefono-softphone-input" style="width: 100%; padding: 10px 40px 10px 12px; border: 2px solid #00c0e1; border-radius: 4px; font-size: 14px; background: #f8f9fa; font-weight: 600; color: #00c0e1; cursor: pointer; transition: all 0.3s ease; box-sizing: border-box;" placeholder="Haz clic para copiar al softphone" title="Haz clic para copiar este número al softphone">';
+    html += '<i class="fas fa-phone-alt" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #00c0e1; pointer-events: none;"></i>';
     html += '</div>';
     html += '</div>';
     
@@ -1379,7 +1379,7 @@ function configurarTelefonos(datosCliente) {
                 this.style.borderColor = '#28a745';
                 setTimeout(() => {
                     this.style.background = '#f8f9fa';
-                    this.style.borderColor = '#007bff';
+                    this.style.borderColor = '#00c0e1';
                 }, 500);
             } else {
                 mostrarMensajeTemporal('No hay número seleccionado', 'warning');
@@ -1445,7 +1445,7 @@ function configurarEmail(datosCliente) {
         // Mostrar el contenedor y establecer el email
         emailContainer.style.display = 'flex';
         emailSpan.textContent = email.trim();
-        emailSpan.style.color = '#007bff';
+        emailSpan.style.color = '#00c0e1';
         emailSpan.style.fontWeight = '500';
         console.log('Asesor_gestionar.js: Email mostrado:', email.trim());
     } else {
@@ -1718,7 +1718,7 @@ function mostrarHistorial(gestiones) {
         html += `
             <div class="historial-item">
                 <div style="margin-bottom: 10px;">
-                    <div style="color: #007bff; font-weight: 600;">
+                    <div style="color: #00c0e1; font-weight: 600;">
                         <i class="fas fa-calendar"></i> ${fecha}
                     </div>
                     <div style="margin-top: 5px;">
@@ -1748,8 +1748,8 @@ function mostrarHistorial(gestiones) {
                 </div>
                 ${gestion.acuerdo ? (function() {
                     const a = gestion.acuerdo;
-                    let bloque = '<div class="historial-acuerdo" style="margin-top: 12px; padding: 10px; background: #f0f8ff; border-left: 4px solid #007bff; border-radius: 4px;">';
-                    bloque += '<p style="margin: 0 0 8px; font-weight: 600; color: #007bff;"><i class="fas fa-file-contract"></i> Datos del acuerdo</p>';
+                    let bloque = '<div class="historial-acuerdo" style="margin-top: 12px; padding: 10px; background: #f0f8ff; border-left: 4px solid #00c0e1; border-radius: 4px;">';
+                    bloque += '<p style="margin: 0 0 8px; font-weight: 600; color: #00c0e1;"><i class="fas fa-file-contract"></i> Datos del acuerdo</p>';
                     if (a.tipo_acuerdo === 'total') {
                         if (a.valor_original != null) bloque += '<p style="margin: 4px 0;"><strong>Saldo a pagar:</strong> $' + parseFloat(a.valor_original).toLocaleString('es-CO') + '</p>';
                         if (a.descuento_aplicado != null && parseFloat(a.descuento_aplicado) > 0) bloque += '<p style="margin: 4px 0;"><strong>Descuento aplicado:</strong> $' + parseFloat(a.descuento_aplicado).toLocaleString('es-CO') + '</p>';
@@ -3368,7 +3368,7 @@ function mostrarModalAgregarInfo() {
                         <button type="button" onclick="cerrarModalAgregarInfo()" style="padding: 10px 20px; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; font-size: 14px;">
                             Cancelar
                         </button>
-                        <button type="submit" style="padding: 10px 20px; border: none; border-radius: 6px; background: #007bff; color: white; cursor: pointer; font-size: 14px;">
+                        <button type="submit" style="padding: 10px 20px; border: none; border-radius: 6px; background: #00c0e1; color: white; cursor: pointer; font-size: 14px;">
                             <i class="fas fa-save"></i> Guardar
                         </button>
                     </div>

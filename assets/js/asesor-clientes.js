@@ -1013,7 +1013,7 @@ function mostrarModalHistorial(clienteId) {
         
         .historial-fecha {
             font-weight: bold;
-            color: #007bff;
+            color: #00c0e1;
             margin-bottom: 5px;
         }
         

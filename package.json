@@ -1,0 +1,13 @@
+{
+  "name": "bancow-crm",
+  "version": "1.0.0",
+  "description": "Banco W CRM - Pruebas E2E con Playwright",
+  "scripts": {
+    "test": "playwright test",
+    "test:e2e": "playwright test e2e/asesor-gestion.spec.js",
+    "test:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}

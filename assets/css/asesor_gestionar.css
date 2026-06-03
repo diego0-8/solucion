@@ -13,7 +13,7 @@
 
 /* Header de la gestión */
 .gestion-header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: linear-gradient(135deg, #00c0e1, #00a3bd);
     color: white;
     padding: 20px;
     border-radius: 12px;
@@ -65,7 +65,7 @@
     color: #333;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #00c0e1;
     font-size: 18px;
 }
 
@@ -111,7 +111,7 @@
 }
 
 .seccion-info-cliente h3 i {
-    color: #007bff;
+    color: #00c0e1;
 }
 
 .cliente-detalles h4 {
@@ -170,7 +170,7 @@
 }
 
 .cliente-dato a {
-    color: #007bff;
+    color: #00c0e1;
     text-decoration: none;
 }
 
@@ -361,14 +361,14 @@
     flex-shrink: 0;
 }
 .obligaciones-totales .total-valor {
-    color: #007bff;
+    color: #00c0e1;
     font-weight: 700;
     text-align: right;
     white-space: nowrap;
 }
 #obligaciones-sum-total,
 #obligaciones-sum-total-pagar {
-    color: #007bff;
+    color: #00c0e1;
 }
 
 /* Tabla de obligaciones */
@@ -492,7 +492,7 @@
 .contrato-header {
     margin-bottom: 10px;
     padding-bottom: 8px;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #00c0e1;
 }
 
 .contrato-header h4 {
@@ -506,7 +506,7 @@
 }
 
 .contrato-header h4 i {
-    color: #007bff;
+    color: #00c0e1;
 }
 
 .contrato-info {
@@ -534,7 +534,7 @@
 
 .info-label i {
     width: 16px;
-    color: #007bff;
+    color: #00c0e1;
     font-size: 12px;
 }
 
@@ -662,7 +662,7 @@
 
 .canal-item label i.fa-phone { color: #dc3545; }
 .canal-item label i.fab.fa-whatsapp { color: #25d366; }
-.canal-item label i.fa-envelope { color: #007bff; }
+.canal-item label i.fa-envelope { color: #00c0e1; }
 .canal-item label i.fa-sms { color: #28a745; }
 .canal-item label i.fa-mail-bulk { color: #dc3545; }
 .canal-item label i.fa-comments { color: #6c757d; }
@@ -732,11 +732,11 @@
     align-items: center;
     gap: 10px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #00c0e1;
 }
 
 .seccion-historial-full h3 i {
-    color: #007bff;
+    color: #00c0e1;
 }
 
 .historial-vacio {
@@ -773,7 +773,7 @@
 
 .cargando-contratos i {
     font-size: 24px;
-    color: #007bff;
+    color: #00c0e1;
 }
 
 .cargando-contratos p {
@@ -865,8 +865,8 @@
 
 .telefono-select:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    border-color: #00c0e1;
+    box-shadow: 0 0 0 2px rgba(0,192,225,0.25);
 }
 
 /* Estilos para datos del contrato */
@@ -898,13 +898,13 @@
 
 .tipificacion-item:hover {
     background: #e3f2fd;
-    border-color: #007bff;
+    border-color: #00c0e1;
 }
 
 .tipificacion-item.selected {
-    background: #007bff;
+    background: #00c0e1;
     color: white;
-    border-color: #0056b3;
+    border-color: #00a3bd;
 }
 
 .tipificacion-item .item-title {
@@ -934,12 +934,12 @@
 
 .historial-item:hover {
     background: #e3f2fd;
-    border-color: #007bff;
+    border-color: #00c0e1;
 }
 
 .historial-fecha {
     font-weight: bold;
-    color: #007bff;
+    color: #00c0e1;
     margin-bottom: 5px;
     font-size: 12px;
 }
@@ -992,14 +992,14 @@
 }
 
 .btn-primary {
-    background: #007bff;
+    background: #00c0e1;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #0056b3;
+    background: #00a3bd;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    box-shadow: 0 4px 8px rgba(0,192,225,0.3);
 }
 
 .btn-secondary {
@@ -1090,12 +1090,12 @@
 
 .observacion-item:hover {
     background: #e3f2fd;
-    border-color: #007bff;
+    border-color: #00c0e1;
 }
 
 .observacion-fecha {
     font-weight: bold;
-    color: #007bff;
+    color: #00c0e1;
     margin-bottom: 8px;
     font-size: 12px;
 }
@@ -1148,13 +1148,13 @@
 
 .historial-item:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
+    border-color: #00c0e1;
 }
 
 .historial-fecha {
     font-size: 16px;
     font-weight: 600;
-    color: #007bff;
+    color: #00c0e1;
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 2px solid #e9ecef;
@@ -1192,7 +1192,7 @@
     padding: 15px;
     border-radius: 6px;
     margin-top: 15px;
-    border-left: 3px solid #007bff;
+    border-left: 3px solid #00c0e1;
 }
 
 .historial-observaciones p {
@@ -1292,20 +1292,20 @@
 
 .telefono-softphone-input:hover {
     background: #e7f3ff !important;
-    border-color: #0056b3 !important;
+    border-color: #00a3bd !important;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 192, 225, 0.2);
 }
 
 .telefono-softphone-input:active {
     transform: translateY(0);
-    box-shadow: 0 1px 4px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 192, 225, 0.3);
 }
 
 .telefono-softphone-input:focus {
     outline: none;
-    border-color: #0056b3 !important;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #00a3bd !important;
+    box-shadow: 0 0 0 3px rgba(0, 192, 225, 0.1);
 }
 
 /* Asegurar que el icono dentro del input no cause overflow */
@@ -1314,7 +1314,7 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: #007bff;
+    color: #00c0e1;
     pointer-events: none;
     z-index: 1;
 }
