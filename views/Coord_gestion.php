@@ -296,6 +296,9 @@
                             <!-- Zona de Carga de Archivos -->
                             <div class="form-section">
                                 <h4>Subir Archivo CSV</h4>
+                                <p class="upload-hint" style="margin: 0 0 16px; font-size: 13px; color: #666;">
+                                    Use el mismo formato que la exportación Soluciona (plantilla descargable). Separador recomendado: punto y coma (;). Campos obligatorios por fila: <strong>No. Operación</strong> e <strong>Identificación</strong>.
+                                </p>
                                 
                                 <!-- Selección de Tipo de Carga -->
                                 <div class="upload-type-selection">
@@ -384,7 +387,7 @@
                                             <label>Separador de Campos</label>
                                             <select id="separator" class="form-control">
                                                 <option value=",">Coma (,)</option>
-                                                <option value=";">Punto y coma (;)</option>
+                                                <option value=";" selected>Punto y coma (;)</option>
                                                 <option value="\t">Tabulación</option>
                                                 <option value="|">Pipe (|)</option>
                                             </select>
@@ -552,15 +555,15 @@
                 <button class="modal-close" onclick="closeModal('plantilla-csv')">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Descarga la plantilla CSV con el formato correcto para cargar clientes.</p>
+                <p>Descarga la plantilla CSV con el mismo formato que el archivo de exportación Soluciona (pestaña Carga de archivo).</p>
                 <div class="template-info">
-                    <h4>Campos Requeridos:</h4>
+                    <h4>Formato de la plantilla</h4>
                     <ul>
-                        <li>nombre_completo</li>
-                        <li>email</li>
-                        <li>telefono</li>
-                        <li>fecha_nacimiento</li>
-                        <li>direccion</li>
+                        <li>Separador: punto y coma (;)</li>
+                        <li>Primera fila: encabezados (121 columnas)</li>
+                        <li>Segunda fila: ejemplo de referencia</li>
+                        <li><strong>Obligatorios:</strong> No. Operación, Identificación</li>
+                        <li>Incluye clientes, obligaciones, teléfonos (Celular 1–7, Teléfono 1–3), correos (Email 1–5), montos y judicialización</li>
                     </ul>
                 </div>
             </div>

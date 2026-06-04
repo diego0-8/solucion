@@ -178,6 +178,19 @@ function normalizarNumeroContacto(numero) {
     return String(numero).replace(/\D/g, '').substring(0, 20);
 }
 
+/**
+ * Teléfono válido para el desplegable: solo dígitos, sin guiones ni símbolos,
+ * y el primer dígito debe ser entre 1 y 9 (no puede empezar por 0).
+ * @returns {string|null}
+ */
+function telefonoValidoParaSelector(numero) {
+    const digits = normalizarNumeroContacto(numero);
+    if (!digits || digits.charAt(0) === '0') {
+        return null;
+    }
+    return digits;
+}
+
 function obtenerNumeroContactoSeleccionado() {
     const telefonoSelect = document.getElementById('telefono-select');
     if (!telefonoSelect || !telefonoSelect.value) return '';
@@ -306,12 +319,7 @@ function cargarDatosCliente() {
                 if (ciudadEl) {
                     ciudadEl.textContent = (datosCliente.ciudad || '').trim() || '-';
                 }
-                const sectorEl = document.getElementById('cliente-sector');
-                if (sectorEl) {
-                    sectorEl.textContent = (datosCliente.sector || '').trim() || '-';
-                }
-                
-                // Configurar teléfonos con validación (cel1 a cel10)
+                // Configurar teléfonos con validación (tel1 a tel10)
                 configurarTelefonos(datosCliente);
                 
                 // Configurar email (solo mostrar si existe)
@@ -402,12 +410,18 @@ function mostrarContratos(obligaciones) {
         return;
     }
     
-    // Sumar total y total_a_pagar desde la base de datos
+    // Sumar saldo capital y total obligación desde la base de datos
     let sumTotal = 0;
     let sumTotalPagar = 0;
     obligaciones.forEach(ob => {
-        sumTotal += parseFloat(ob.total != null ? ob.total : ob.TOTAL || 0);
-        sumTotalPagar += parseFloat(ob.total_a_pagar != null ? ob.total_a_pagar : ob.TOTAL_A_PAGAR || 0);
+        const saldo = ob.saldo_capital != null && ob.saldo_capital !== ''
+            ? parseFloat(ob.saldo_capital)
+            : parseFloat(ob.total != null ? ob.total : ob.TOTAL || 0);
+        const totalObl = ob.total_obligacion != null && ob.total_obligacion !== ''
+            ? parseFloat(ob.total_obligacion)
+            : parseFloat(ob.total_a_pagar != null ? ob.total_a_pagar : ob.TOTAL_A_PAGAR || 0);
+        sumTotal += isNaN(saldo) ? 0 : saldo;
+        sumTotalPagar += isNaN(totalObl) ? 0 : totalObl;
     });
     
     titulo.innerHTML = '<i class="fas fa-file-invoice-dollar"></i> Obligaciones';
@@ -438,27 +452,26 @@ function mostrarContratos(obligaciones) {
         if (n('conceptoMes') !== '-' && n('conceptoMes') === n('tipoProducto')) {
             omitir.add('conceptoMes');
         }
-        if (n('total') !== '-' && n('total') === n('totalPagar')) {
-            omitir.add('totalPagar');
-        }
         return lista.filter(({ key }) => !omitir.has(key));
     };
 
     const etiquetasBase = [
         { key: 'numObl', label: 'Nº Obligación' },
-        { key: 'cuentaCliente', label: 'Cuenta cliente' },
         { key: 'compra', label: 'Compra' },
         { key: 'tipoProducto', label: 'Tipo de producto' },
-        { key: 'cartera', label: 'Cartera' },
         { key: 'oficina', label: 'Oficina' },
         { key: 'añoCastigo', label: 'Año castigo' },
         { key: 'conceptoMes', label: 'Concepto mes actual' },
         { key: 'estadoJuridico', label: 'Estado proceso jurídico' },
         { key: 'valorDesembolso', label: 'Valor desembolso', monto: true },
+        { key: 'saldoCapital', label: 'Saldo capital', monto: true },
+        { key: 'saldoCapitalActual', label: 'Saldo de capital actual', monto: true },
         { key: 'interesesCorrientes', label: 'Intereses corrientes', monto: true },
         { key: 'interesesMora', label: 'Intereses mora', monto: true },
-        { key: 'total', label: 'Total', monto: true },
-        { key: 'totalPagar', label: 'Total a pagar', monto: true }
+        { key: 'seguros', label: 'Seguros', monto: true },
+        { key: 'otrosConceptos', label: 'Otros conceptos', monto: true },
+        { key: 'totalObligacion', label: 'Total obligación', monto: true },
+        { key: 'valorCuota', label: 'Valor cuota', monto: true }
     ];
     
     // Contenedor con scroll solo cuando hay más de una obligación (a partir de "Obligación 1")
@@ -469,32 +482,60 @@ function mostrarContratos(obligaciones) {
     
     obligaciones.forEach((obligacion, index) => {
         const numObl = obligacion.operacion || obligacion.numero_operacion || obligacion.numero_obligacion || 'N/A';
-        const cuentaCliente = txtOblig(obligacion.cuenta_cliente);
         const compra = txtOblig(obligacion.compra || obligacion.oficina);
         const tipoProducto = txtOblig(obligacion.tipo_producto || obligacion.concepto_mes_actual);
-        const cartera = txtOblig(obligacion.cartera);
         const oficina = txtOblig(obligacion.oficina);
         const añoCastigo = txtOblig(obligacion.ano_castigo || obligacion.año_castigo || obligacion.anio_castigo);
         const conceptoMes = txtOblig(obligacion.concepto_mes_actual);
         const estadoJuridico = txtOblig(obligacion.estado_proceso_juridico);
-        const total = parseFloat(obligacion.total != null ? obligacion.total : obligacion.saldo_capital || obligacion.TOTAL || 0);
-        const totalPagar = parseFloat(obligacion.total_a_pagar != null ? obligacion.total_a_pagar : obligacion.total_obligacion || obligacion.TOTAL_A_PAGAR || 0);
+        const saldoCapitalNum = parseFloat(
+            obligacion.saldo_capital != null && obligacion.saldo_capital !== ''
+                ? obligacion.saldo_capital
+                : (obligacion.total != null ? obligacion.total : obligacion.TOTAL || 0)
+        );
+        const saldoCapitalActualNum = parseFloat(
+            obligacion.saldo_capital_actual != null && obligacion.saldo_capital_actual !== ''
+                ? obligacion.saldo_capital_actual
+                : saldoCapitalNum
+        );
+        const totalObligNum = parseFloat(
+            obligacion.total_obligacion != null && obligacion.total_obligacion !== ''
+                ? obligacion.total_obligacion
+                : (obligacion.total_a_pagar != null ? obligacion.total_a_pagar : obligacion.TOTAL_A_PAGAR || 0)
+        );
         
+        const parseMontoRaw = (v) => {
+            const n = parseFloat(v);
+            return isNaN(n) ? 0 : n;
+        };
+        const montosRaw = {
+            valorDesembolso: parseMontoRaw(obligacion.valor_desembolso),
+            saldoCapital: isNaN(saldoCapitalNum) ? 0 : saldoCapitalNum,
+            saldoCapitalActual: isNaN(saldoCapitalActualNum) ? 0 : saldoCapitalActualNum,
+            interesesCorrientes: parseMontoRaw(obligacion.intereses_corrientes),
+            interesesMora: parseMontoRaw(obligacion.intereses_mora),
+            seguros: parseMontoRaw(obligacion.seguros),
+            otrosConceptos: parseMontoRaw(obligacion.otros_conceptos),
+            totalObligacion: isNaN(totalObligNum) ? 0 : totalObligNum,
+            valorCuota: parseMontoRaw(obligacion.valor_cuota)
+        };
         const valores = {
             numObl,
-            cuentaCliente,
             compra,
             tipoProducto,
-            cartera,
             oficina,
             añoCastigo,
             conceptoMes,
             estadoJuridico,
-            valorDesembolso: fmtMontoOblig(obligacion.valor_desembolso),
-            interesesCorrientes: fmtMontoOblig(obligacion.intereses_corrientes),
-            interesesMora: fmtMontoOblig(obligacion.intereses_mora),
-            total: fmtMontoOblig(total),
-            totalPagar: fmtMontoOblig(totalPagar)
+            valorDesembolso: fmtMontoOblig(montosRaw.valorDesembolso),
+            saldoCapital: fmtMontoOblig(montosRaw.saldoCapital),
+            saldoCapitalActual: fmtMontoOblig(montosRaw.saldoCapitalActual),
+            interesesCorrientes: fmtMontoOblig(montosRaw.interesesCorrientes),
+            interesesMora: fmtMontoOblig(montosRaw.interesesMora),
+            seguros: fmtMontoOblig(montosRaw.seguros),
+            otrosConceptos: fmtMontoOblig(montosRaw.otrosConceptos),
+            totalObligacion: fmtMontoOblig(montosRaw.totalObligacion),
+            valorCuota: fmtMontoOblig(montosRaw.valorCuota)
         };
         
         html += `<div class="obligacion-card">`;
@@ -503,6 +544,12 @@ function mostrarContratos(obligaciones) {
         
         const etiquetas = filtrarEtiquetasSinDuplicado(etiquetasBase, valores);
         etiquetas.forEach(({ key, label, monto }) => {
+            if (monto) {
+                const raw = montosRaw[key];
+                if (raw == null || raw < 1) {
+                    return;
+                }
+            }
             const valor = valores[key] !== undefined && valores[key] !== null ? valores[key] : '-';
             const claseExtra = monto ? ' obligacion-valor-monto' : (key === 'compra' ? ' obligacion-valor-compra' : '');
             html += `
@@ -559,11 +606,15 @@ function llenarSelectorContratos(obligaciones) {
         obligaciones.forEach((obligacion) => {
             const idObl = obligacion.id_obligacion || obligacion.id || 0;
             const numObl = obligacion.operacion || obligacion.numero_operacion || obligacion.numero_obligacion || 'N/A';
-            const totalPagar = parseFloat(obligacion.total_a_pagar != null ? obligacion.total_a_pagar : obligacion.TOTAL_A_PAGAR || 0);
+            const totalObligSel = parseFloat(
+                obligacion.total_obligacion != null && obligacion.total_obligacion !== ''
+                    ? obligacion.total_obligacion
+                    : (obligacion.total_a_pagar != null ? obligacion.total_a_pagar : obligacion.TOTAL_A_PAGAR || 0)
+            );
             
             const option = document.createElement('option');
             option.value = idObl;
-            option.textContent = `${numObl} - $${totalPagar.toLocaleString('es-CO')}`;
+            option.textContent = `${numObl} - $${(isNaN(totalObligSel) ? 0 : totalObligSel).toLocaleString('es-CO')}`;
             select.appendChild(option);
         });
         actualizarSubseleccionObligacionesTodasAcuerdo();
@@ -1260,12 +1311,14 @@ function configurarTelefonos(datosCliente) {
         return;
     }
     
-    // Extraer teléfonos del cliente (tel1 a tel10 o cel1 a cel10)
-    let celulares = [];
+    // Extraer teléfonos del cliente (tel1 a tel10 o cel1 a cel10): solo dígitos, sin empezar por 0
+    const celulares = [];
+    const vistos = new Set();
     for (let i = 1; i <= 10; i++) {
         const tel = datosCliente[`tel${i}`] || datosCliente[`cel${i}`];
-        const numero = (tel != null && tel !== undefined) ? String(tel).trim() : '';
-        if (numero !== '' && numero !== '0' && numero !== 'NULL' && numero.toLowerCase() !== 'null') {
+        const numero = telefonoValidoParaSelector(tel);
+        if (numero && !vistos.has(numero)) {
+            vistos.add(numero);
             celulares.push({
                 numero: numero,
                 tipo: `Teléfono ${i}`
@@ -1283,10 +1336,10 @@ function configurarTelefonos(datosCliente) {
     // Crear desplegable de celulares + campo clickeable para copiar al softphone
     let html = '<div class="telefono-selector-container">';
     
-    // Selector de teléfono
-    html += '<div>';
-    html += '<label for="telefono-select">Teléfono:</label>';
-    html += '<select id="telefono-select" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; font-weight: 500; background: white; cursor: pointer; width: 100%; box-sizing: border-box;">';
+    // Selector de teléfono: etiqueta al lado (sin icono), solo dígitos válidos en opciones
+    html += '<div class="telefono-select-row">';
+    html += '<label class="telefono-select-label" for="telefono-select">Teléfono:</label>';
+    html += '<select id="telefono-select" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; font-weight: 500; background: white; cursor: pointer; box-sizing: border-box;">';
     
     celulares.forEach((celular, index) => {
         html += `<option value="${celular.numero}">${celular.numero}</option>`;
@@ -1363,7 +1416,8 @@ function configurarTelefonos(datosCliente) {
         
         // Evento para actualizar el campo cuando cambia la selección
         select.addEventListener('change', function() {
-            const numeroSeleccionado = this.value;
+            const numeroSeleccionado = telefonoValidoParaSelector(this.value) || '';
+            this.value = numeroSeleccionado;
             campoSoftphone.value = numeroSeleccionado;
             console.log('Asesor_gestionar.js: Celular seleccionado:', numeroSeleccionado);
         });

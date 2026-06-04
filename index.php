@@ -182,6 +182,21 @@ if (in_array($action, $rutasCoordAjax, true)) {
         echo json_encode(['success' => false, 'message' => 'No autorizado']);
         exit;
     }
+    $accionesDescargaArchivo = ['descargar_plantilla', 'exportar_bases', 'generar_reporte_gestiones', 'generar_reporte_tmo'];
+    if (in_array($action, $accionesDescargaArchivo, true)) {
+        require_once __DIR__ . '/controllers/CoordGestionController.php';
+        $ctrl = new CoordGestionController();
+        if ($action === 'descargar_plantilla') {
+            $ctrl->descargarPlantilla();
+        } elseif ($action === 'exportar_bases') {
+            $ctrl->exportarBases();
+        } elseif ($action === 'generar_reporte_gestiones') {
+            $ctrl->generarReporteGestiones();
+        } else {
+            $ctrl->generarReporteTmo();
+        }
+        exit;
+    }
     header('Content-Type: application/json');
     ob_start();
     try {
@@ -283,12 +298,6 @@ if (in_array($action, $rutasCoordAjax, true)) {
             case 'obtener_asignaciones_pendientes':
                 $resultado = $ctrl->obtenerAsignacionesPendientes();
                 break;
-            case 'descargar_plantilla':
-                $resultado = $ctrl->descargarPlantilla();
-                break;
-            case 'exportar_bases':
-                $resultado = $ctrl->exportarBases();
-                break;
             case 'limpiar_historial':
                 $resultado = $ctrl->limpiarHistorial();
                 break;
@@ -298,12 +307,6 @@ if (in_array($action, $rutasCoordAjax, true)) {
             case 'buscar_gestiones_asesor_coord':
                 $resultado = $ctrl->buscarGestionesAsesorCoord();
                 break;
-            case 'generar_reporte_gestiones':
-                $ctrl->generarReporteGestiones();
-                return;
-            case 'generar_reporte_tmo':
-                $ctrl->generarReporteTmo();
-                return;
             default:
                 $resultado = ['success' => false, 'message' => 'Acción no implementada'];
         }

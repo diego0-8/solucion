@@ -2450,10 +2450,13 @@ function _filasDetalleObligacion(items) {
     for (const item of items) {
         if (!item) continue;
         const raw = item.raw != null ? item.raw : item.valor;
-        const dedupeKey = item.monto ? 'm:' + normMonto(raw) : 't:' + normTxt(raw);
-        if (dedupeKey === 't:-' || dedupeKey === 'm:-' || dedupeKey === 'm:0.00') {
+        const isEmptyMonto = item.monto && (raw == null || raw === '' || (typeof raw === 'string' && String(raw).trim() === ''));
+        const isEmptyTexto = !item.monto && normTxt(raw) === '-';
+        if (isEmptyMonto || isEmptyTexto) {
             continue;
         }
+        // Dedupe por etiqueta + valor (evita ocultar montos distintos con el mismo número, p. ej. saldo capital vs saldo actual)
+        const dedupeKey = (item.label || '') + '|' + (item.monto ? 'm:' + normMonto(raw) : 't:' + normTxt(raw));
         if (seen.has(dedupeKey)) {
             continue;
         }
@@ -2468,8 +2471,11 @@ function _htmlDetalleObligacionCard(ob, index) {
     const compra = _fmtDetalleTexto(ob.compra || ob.oficina);
     const tipoProducto = _fmtDetalleTexto(ob.tipo_producto || ob.concepto_mes_actual);
     const anoCastigo = _fmtDetalleTexto(ob.ano_castigo || ob['año_castigo'] || ob.anos_castigo);
-    const saldoCapital = ob.saldo_capital != null ? ob.saldo_capital : ob.total;
-    const totalOblig = ob.total_obligacion != null ? ob.total_obligacion : ob.total_a_pagar;
+    const saldoCapital = ob.saldo_capital != null && ob.saldo_capital !== '' ? ob.saldo_capital : ob.total;
+    const saldoCapitalActual = ob.saldo_capital_actual != null && ob.saldo_capital_actual !== ''
+        ? ob.saldo_capital_actual
+        : saldoCapital;
+    const totalOblig = ob.total_obligacion != null && ob.total_obligacion !== '' ? ob.total_obligacion : ob.total_a_pagar;
 
     const secIdent = _renderSeccionDetalleObligacion('Identificación', _filasDetalleObligacion([
         { label: 'No. operación', valor: op, raw: op },
@@ -2487,16 +2493,25 @@ function _htmlDetalleObligacionCard(ob, index) {
         { label: 'Estado jurídico', valor: _fmtDetalleTexto(ob.estado_proceso_juridico), raw: ob.estado_proceso_juridico },
     ]));
 
-    const secMontos = _renderSeccionDetalleObligacion('Montos', _filasDetalleObligacion([
+    const filasMontos = [
         { label: 'Valor desembolso', valor: _fmtDetalleNumero(ob.valor_desembolso), raw: ob.valor_desembolso, monto: true },
         { label: 'Saldo capital', valor: _fmtDetalleNumero(saldoCapital), raw: saldoCapital, monto: true },
+    ];
+    filasMontos.push({
+        label: 'Saldo de capital actual',
+        valor: _fmtDetalleNumero(saldoCapitalActual),
+        raw: saldoCapitalActual,
+        monto: true,
+    });
+    filasMontos.push(
         { label: 'Intereses corrientes', valor: _fmtDetalleNumero(ob.intereses_corrientes), raw: ob.intereses_corrientes, monto: true },
         { label: 'Intereses mora', valor: _fmtDetalleNumero(ob.intereses_mora), raw: ob.intereses_mora, monto: true },
         { label: 'Seguros', valor: _fmtDetalleNumero(ob.seguros), raw: ob.seguros, monto: true },
         { label: 'Otros conceptos', valor: _fmtDetalleNumero(ob.otros_conceptos), raw: ob.otros_conceptos, monto: true },
         { label: 'Total obligación', valor: _fmtDetalleNumero(totalOblig), raw: totalOblig, monto: true },
-        { label: 'Valor cuota', valor: _fmtDetalleNumero(ob.valor_cuota), raw: ob.valor_cuota, monto: true },
-    ]));
+        { label: 'Valor cuota', valor: _fmtDetalleNumero(ob.valor_cuota), raw: ob.valor_cuota, monto: true }
+    );
+    const secMontos = _renderSeccionDetalleObligacion('Montos', _filasDetalleObligacion(filasMontos));
 
     const secCuotas = _renderSeccionDetalleObligacion('Cuotas y condiciones', _filasDetalleObligacion([
         { label: 'Reestructurado', valor: _fmtDetalleTexto(ob.reestructurado), raw: ob.reestructurado },

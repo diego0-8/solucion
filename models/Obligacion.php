@@ -9,7 +9,7 @@ class Obligacion {
     private static $columnas = [
         'operacion', 'base_id', 'cliente_id', 'cuenta_cliente',
         'ident_credito', 'tipo_cliente', 'dueno_cartera', 'cartera', 'compra', 'tipo_producto',
-        'valor_desembolso', 'saldo_capital', 'intereses_corrientes', 'intereses_mora',
+        'valor_desembolso', 'saldo_capital', 'saldo_capital_actual', 'intereses_corrientes', 'intereses_mora',
         'seguros', 'otros_conceptos', 'total_obligacion', 'valor_cuota', 'reestructurado', 'tasa',
         'cuotas_pactadas', 'cuotas_pagadas', 'cuotas_restantes',
         'fecha_desembolso', 'fecha_inicio_mora', 'fecha_vencimiento_final', 'fecha_castigo',
@@ -31,7 +31,7 @@ class Obligacion {
             if (strpos($col, 'fecha_') === 0) {
                 $out[$col] = ($v === null || $v === '') ? null : $v;
             } elseif (in_array($col, [
-                'valor_desembolso', 'saldo_capital', 'intereses_corrientes', 'intereses_mora',
+                'valor_desembolso', 'saldo_capital', 'saldo_capital_actual', 'intereses_corrientes', 'intereses_mora',
                 'seguros', 'otros_conceptos', 'total_obligacion', 'valor_cuota', 'total', 'total_a_pagar',
             ], true)) {
                 $out[$col] = CsvCargaHelper::parsearDecimalColombia($v);

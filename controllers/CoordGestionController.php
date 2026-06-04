@@ -1909,65 +1909,64 @@ class CoordGestionController {
     }
 
     /**
-     * Descarga la plantilla CSV real para carga de datos (mismo formato que la imagen de referencia)
-     * Columnas: OPERACIÓN, CUENTA CLIENTE, OFICINA, IDENTIFICACION, NOMBRE CLIENTE, AÑO DE CASTIGO,
-     * CONCEPTO MES ACTUAL, ESTADO PROCESO JURIDICO, Total, TOTAL A PAGAR, CORREO, tel1..tel10
+     * Descarga la plantilla CSV (mismo formato que la exportación Soluciona usada en Carga de archivo).
+     * Archivo: plantillas/plantilla_carga_clientes.csv (encabezados + fila de ejemplo).
      * @return void
      */
     public function descargarPlantilla() {
         try {
-            header('Content-Type: text/csv; charset=utf-8');
-            header('Content-Disposition: attachment; filename="plantilla_carga_clientes.csv"');
-
-            $columnas = [
-                'OPERACIÓN',
-                'CUENTA CLIENTE',
-                'OFICINA',
-                'IDENTIFICACION',
-                'NOMBRE CLIENTE',
-                'AÑO DE CASTIGO',
-                'CONCEPTO MES ACTUAL',
-                'ESTADO PROCESO JURIDICO',
-                'Total',
-                'TOTAL A PAGAR',
-                'CORREO',
-                'tel1',
-                'tel2',
-                'tel3',
-                'tel4',
-                'tel5',
-                'tel6',
-                'tel7',
-                'tel8',
-                'tel9',
-                'tel10',
-            ];
-
-            $output = fopen('php://output', 'w');
-
-            // BOM UTF-8 para Excel
-            fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
-
-            fputcsv($output, $columnas);
-
-            // Filas de ejemplo según formato real (como en la imagen)
-            // Nota: se incluye ahora la columna CORREO entre TOTAL A PAGAR y tel1
-            $ejemplos = [
-                ['361238', '424545', 'FUNZA', '174157', 'Everardo Ortega Pabon', '2024', 'ALIVIOS CASTIGADOS', 'NO JUDICIALIZADO', '184077', '36815', 'everardo.ortega@example.com', '3014289243', '3227158862', '0', '0', '', '', '', '', '', ''],
-                ['127972', '465473', 'SOACHA', '195413', 'Acuna Romero Julio', '2024', 'ALIVIOS CASTIGADOS', 'NO JUDICIALIZADO', '71863', '14373', 'julio.acuna@example.com', '3138054888', '3228625660', '0', '0', '', '', '', '', '', ''],
-            ];
-            foreach ($ejemplos as $fila) {
-                fputcsv($output, $fila);
+            $rutaPlantilla = dirname(__DIR__) . '/plantillas/plantilla_carga_clientes.csv';
+            if (!is_readable($rutaPlantilla)) {
+                $this->regenerarPlantillaCargaCsv($rutaPlantilla);
+            }
+            if (!is_readable($rutaPlantilla)) {
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode(['success' => false, 'message' => 'No se encontró la plantilla de carga. Contacte al administrador.']);
+                exit;
             }
 
-            fclose($output);
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="plantilla_carga_clientes.csv"');
+            header('Content-Length: ' . filesize($rutaPlantilla));
+            readfile($rutaPlantilla);
             exit;
         } catch (Exception $e) {
             error_log("CoordGestionController::descargarPlantilla - " . $e->getMessage());
-            header('Content-Type: application/json');
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             exit;
         }
+    }
+
+    /**
+     * Genera plantillas/plantilla_carga_clientes.csv desde datos 1.csv si existe en el proyecto.
+     */
+    private function regenerarPlantillaCargaCsv($rutaDestino) {
+        require_once dirname(__DIR__) . '/helpers/CsvCargaHelper.php';
+        $origen = dirname(__DIR__) . '/datos 1.csv';
+        if (!is_readable($origen)) {
+            return;
+        }
+        $muestra = (string) @file_get_contents($origen, false, null, 0, 8192);
+        $sep = CsvCargaHelper::detectarSeparador($muestra);
+        $parsed = CsvCargaHelper::leerFilasCsv($origen, $sep, 'utf-8');
+        if (empty($parsed['headers'])) {
+            return;
+        }
+        $dir = dirname($rutaDestino);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        $out = @fopen($rutaDestino, 'w');
+        if (!$out) {
+            return;
+        }
+        fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        fputcsv($out, $parsed['headers'], $sep, '"', '\\');
+        if (!empty($parsed['rows'][0])) {
+            fputcsv($out, $parsed['rows'][0], $sep, '"', '\\');
+        }
+        fclose($out);
     }
 
     /**

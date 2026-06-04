@@ -53,16 +53,11 @@ $fecha_min_volver_llamar = (new DateTimeImmutable('now', new DateTimeZone('Ameri
                                 <span class="dato-label"><i class="fas fa-map-marker-alt"></i> Ciudad:</span>
                                 <span id="cliente-ciudad">-</span>
                             </div>
-                            <div class="cliente-dato">
-                                <span class="dato-label"><i class="fas fa-building"></i> Sector:</span>
-                                <span id="cliente-sector">-</span>
-                            </div>
                             <div class="cliente-dato" id="cliente-email-container" style="display: none;">
                                 <span class="dato-label"><i class="fas fa-envelope"></i> Correo:</span>
                                 <span id="cliente-email">-</span>
                             </div>
-                            <div class="cliente-dato">
-                                <span class="dato-label"><i class="fas fa-phone"></i> Teléfono:</span>
+                            <div class="cliente-dato cliente-dato-telefonos">
                                 <div class="telefonos-cliente" id="telefonos-cliente">
                                     <span>Cargando...</span>
                                 </div>
@@ -76,11 +71,11 @@ $fecha_min_volver_llamar = (new DateTimeImmutable('now', new DateTimeZone('Ameri
                     <h3 id="contratos-titulo"><i class="fas fa-file-invoice-dollar"></i> Obligaciones</h3>
                     <div id="obligaciones-totales" class="obligaciones-totales" style="display: none;">
                         <div class="total-linea">
-                            <span class="total-label">total</span>
+                            <span class="total-label">Saldo capital (suma)</span>
                             <span id="obligaciones-sum-total" class="total-valor">$0</span>
                         </div>
                         <div class="total-linea">
-                            <span class="total-label">Total a pagar</span>
+                            <span class="total-label">Total obligación (suma)</span>
                             <span id="obligaciones-sum-total-pagar" class="total-valor">$0</span>
                         </div>
                     </div>

@@ -209,7 +209,8 @@ class CsvCargaHelper {
             'tipo_producto' => ['tipo producto'],
             'valor_desembolso' => ['valor desembolso'],
             'saldo_capital' => ['saldo capital'],
-            'intereses_corrientes' => ['intereses corrientes'],
+            'saldo_capital_actual' => ['saldo de capital actual', 'saldo capital actual'],
+            'intereses_corrientes' => ['intereses corrientes', 'intereses corriente'],
             'intereses_mora' => ['intereses de mora', 'intereses mora'],
             'seguros' => ['seguros'],
             'otros_conceptos' => ['otros conceptos'],
@@ -381,7 +382,8 @@ class CsvCargaHelper {
         $compra = self::limpiarTextoCsv($data['compra'] ?? '');
         $cartera = self::limpiarTextoCsv($data['cartera'] ?? '');
         $tipoProducto = self::limpiarTextoCsv($data['tipo_producto'] ?? '');
-        $saldoCapital = self::parsearDecimalColombia($data['saldo_capital'] ?? $data['total'] ?? '0');
+        $saldoCapital = self::parsearDecimalColombia($data['saldo_capital'] ?? '0');
+        $saldoCapitalActual = self::parsearDecimalColombia($data['saldo_capital_actual'] ?? $data['saldo_capital'] ?? '0');
         $totalObligacion = self::parsearDecimalColombia($data['total_obligacion'] ?? $data['total_a_pagar'] ?? '0');
         $fechaCastigo = self::parsearFechaCsv($data['fecha_castigo'] ?? $data['años_castigo'] ?? '');
 
@@ -400,6 +402,7 @@ class CsvCargaHelper {
             'tipo_producto' => $tipoProducto,
             'valor_desembolso' => self::parsearDecimalColombia($data['valor_desembolso'] ?? '0'),
             'saldo_capital' => $saldoCapital,
+            'saldo_capital_actual' => $saldoCapitalActual,
             'intereses_corrientes' => self::parsearDecimalColombia($data['intereses_corrientes'] ?? '0'),
             'intereses_mora' => self::parsearDecimalColombia($data['intereses_mora'] ?? '0'),
             'seguros' => self::parsearDecimalColombia($data['seguros'] ?? '0'),
