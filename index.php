@@ -11,16 +11,9 @@ $action = isset($_GET['action']) ? trim($_GET['action']) : 'login';
 // ----- Login (público) -----
 if ($action === 'login') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // #region agent log
-        $dbgLog = __DIR__ . '/debug-5afbe2.log';
-        @file_put_contents($dbgLog, json_encode(['sessionId'=>'5afbe2','hypothesisId'=>'H1','location'=>'index.php:login','message'=>'POST login inicio','data'=>['usuario'=>trim((string)($_POST['usuario']??''))],'timestamp'=>round(microtime(true)*1000)], JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
-        // #endregion
         require_once __DIR__ . '/controllers/LoginController.php';
         $controller = new LoginController();
         $result = $controller->login();
-        // #region agent log
-        @file_put_contents($dbgLog, json_encode(['sessionId'=>'5afbe2','hypothesisId'=>'H1','location'=>'index.php:login','message'=>'POST login resultado','data'=>['success'=>$result['success']??false,'redirect'=>$result['redirect']??null,'message'=>$result['message']??null],'timestamp'=>round(microtime(true)*1000)], JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND);
-        // #endregion
         if ($result['success']) {
             header('Location: ' . $result['redirect']);
             exit;
@@ -174,7 +167,7 @@ $rutasCoordAjax = [
     'crear_asignacion_clientes', 'detalle_cliente_coordinador', 'verificar_tablas', 'descargar_plantilla',
     'obtener_valores_filtros', 'aplicar_filtros_obligaciones', 'crear_asignacion_clientes_filtrados', 'crear_asignacion_clientes_csv',
     'exportar_bases', 'limpiar_historial', 'obtener_detalles_asesor_coord', 'buscar_gestiones_asesor_coord',
-    'generar_reporte_gestiones', 'generar_reporte_tmo',
+    'generar_reporte_gestiones', 'generar_reporte_tmo', 'descargar_plantilla_reporte',
 ];
 if (in_array($action, $rutasCoordAjax, true)) {
     if (empty($_SESSION['usuario_id']) || strtolower($_SESSION['usuario_rol'] ?? '') !== 'coordinador') {
@@ -182,12 +175,14 @@ if (in_array($action, $rutasCoordAjax, true)) {
         echo json_encode(['success' => false, 'message' => 'No autorizado']);
         exit;
     }
-    $accionesDescargaArchivo = ['descargar_plantilla', 'exportar_bases', 'generar_reporte_gestiones', 'generar_reporte_tmo'];
+    $accionesDescargaArchivo = ['descargar_plantilla', 'descargar_plantilla_reporte', 'exportar_bases', 'generar_reporte_gestiones', 'generar_reporte_tmo'];
     if (in_array($action, $accionesDescargaArchivo, true)) {
         require_once __DIR__ . '/controllers/CoordGestionController.php';
         $ctrl = new CoordGestionController();
         if ($action === 'descargar_plantilla') {
             $ctrl->descargarPlantilla();
+        } elseif ($action === 'descargar_plantilla_reporte') {
+            $ctrl->descargarPlantillaReporteGestiones();
         } elseif ($action === 'exportar_bases') {
             $ctrl->exportarBases();
         } elseif ($action === 'generar_reporte_gestiones') {
@@ -214,9 +209,7 @@ if (in_array($action, $rutasCoordAjax, true)) {
                 $resultado = $ctrl->obtenerEstadisticasBases();
                 break;
             case 'cargar_csv':
-                @file_put_contents(__DIR__ . '/log_carga_diagnostico.txt', date('c') . " cargar_csv: inicio\n", FILE_APPEND);
                 $resultado = $ctrl->cargarCsv();
-                @file_put_contents(__DIR__ . '/log_carga_diagnostico.txt', date('c') . " cargar_csv: resultado obtenido, success=" . (isset($resultado['success']) ? ($resultado['success'] ? 'true' : 'false') : 'n/a') . "\n", FILE_APPEND);
                 break;
             case 'obtener_clientes_base':
                 $resultado = $ctrl->obtenerClientesBase();
@@ -311,26 +304,14 @@ if (in_array($action, $rutasCoordAjax, true)) {
                 $resultado = ['success' => false, 'message' => 'Acción no implementada'];
         }
         ob_end_clean();
-        if ($action === 'cargar_csv') {
-            @file_put_contents(__DIR__ . '/log_carga_diagnostico.txt', date('c') . " cargar_csv: a punto de echo, resultado es array=" . (is_array($resultado) ? 'si' : 'no') . "\n", FILE_APPEND);
-        }
         $json = json_encode($resultado, JSON_UNESCAPED_UNICODE);
         if ($json === false) {
             error_log("Coord AJAX $action: json_encode falló - " . json_last_error_msg());
-            if ($action === 'cargar_csv') {
-                @file_put_contents(__DIR__ . '/log_carga_diagnostico.txt', date('c') . " cargar_csv: json_encode FALLO " . json_last_error_msg() . "\n", FILE_APPEND);
-            }
             $json = json_encode(['success' => false, 'message' => 'Error al generar respuesta'], JSON_UNESCAPED_UNICODE);
         }
         echo $json;
-        if ($action === 'cargar_csv') {
-            @file_put_contents(__DIR__ . '/log_carga_diagnostico.txt', date('c') . " cargar_csv: echo realizado, len=" . strlen($json) . "\n", FILE_APPEND);
-        }
     } catch (Throwable $e) {
         ob_end_clean();
-        if ($action === 'cargar_csv') {
-            @file_put_contents(__DIR__ . '/log_carga_diagnostico.txt', date('c') . " cargar_csv: EXCEPCION " . $e->getMessage() . "\n", FILE_APPEND);
-        }
         error_log("Coord AJAX $action: " . $e->getMessage());
         echo json_encode(['success' => false, 'message' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
     }
@@ -347,6 +328,7 @@ $rutasAsesorAjax = [
     'finalizar_sesion_tiempo', 'guardar_actividad_extra', 'obtener_bases_acceso',
     'obtener_datos_cliente', 'obtener_contratos_cliente', 'actualizar_info_cliente',
     'recordatorios_volver_llamar',
+    'bloquear_asesor', 'verificar_estado_bloqueo',
 ];
 
 if (in_array($action, $rutasAsesorAjax, true)) {
@@ -429,6 +411,12 @@ if (in_array($action, $rutasAsesorAjax, true)) {
                 break;
             case 'recordatorios_volver_llamar':
                 $resultado = $ctrl->obtenerRecordatoriosVolverLlamar();
+                break;
+            case 'bloquear_asesor':
+                $resultado = $ctrl->bloquearAsesor();
+                break;
+            case 'verificar_estado_bloqueo':
+                $resultado = $ctrl->verificarEstadoBloqueo();
                 break;
             default:
                 $resultado = ['success' => false, 'message' => 'Acción no implementada'];

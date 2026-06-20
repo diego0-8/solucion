@@ -36,19 +36,13 @@
                 <p class="call-info">Generación y Descarga de Reportes</p>
                 <small>Análisis y Exportación de Datos</small>
                 <div class="media-controls">
-                    <button class="media-button" onclick="generarReporte('general')">
-                        <i class="fas fa-chart-bar"></i> Reporte General
-                    </button>
-                    <button class="media-button" onclick="generarReporte('asesores')">
-                        <i class="fas fa-users"></i> Reporte Asesores
-                    </button>
-                    <button class="media-button" onclick="generarReporte('clientes')">
-                        <i class="fas fa-user-friends"></i> Reporte Clientes
-                    </button>
-                    <button class="media-button" onclick="generarReporte('productividad')">
-                        <i class="fas fa-chart-line"></i> Reporte Productividad
+                    <button class="media-button" type="button" onclick="descargarPlantillaReporte()">
+                        <i class="fas fa-file-download"></i> Descargar Plantilla CSV
                     </button>
                 </div>
+                <p style="color: #7f8c8d; font-size: 12px; margin-top: 12px; line-height: 1.5;">
+                    La plantilla muestra las columnas exactas del reporte de gestiones que se genera en esta vista.
+                </p>
             </div>
             
             <div class="call-main-view">
@@ -75,7 +69,7 @@
                                     <i class="fas fa-file-csv"></i> Generar Reporte de Gestiones
                                 </h3>
                                 <p style="color: #7f8c8d; margin-bottom: 15px;">
-                                    Genera un reporte completo de todas las gestiones realizadas por los asesores sobre clientes y obligaciones en formato CSV, conservando la fecha de gestión por fila y el contenido completo de observaciones.
+                                    Genera un reporte completo de todas las gestiones realizadas por los asesores sobre clientes y obligaciones en formato CSV, conservando la fecha de gestión por fila y el contenido completo de observaciones. Incluye gestiones aunque el asesor o la base de clientes esté deshabilitada.
                                 </p>
                                 
                             </div>

@@ -27,6 +27,8 @@ class Usuario {
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $i => $row) {
             $rows[$i]['nombre_completo'] = $row['nombre'];
+            $rows[$i]['extension_telefono'] = $row['extension'] ?? '';
+            $rows[$i]['clave_extension'] = $row['sip_password'] ?? '';
         }
         return $rows;
     }
@@ -42,6 +44,8 @@ class Usuario {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
             $row['nombre_completo'] = $row['nombre'];
+            $row['extension_telefono'] = $row['extension'] ?? '';
+            $row['clave_extension'] = $row['sip_password'] ?? '';
         }
         return $row ?: null;
     }
@@ -58,6 +62,8 @@ class Usuario {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
             $row['nombre_completo'] = $row['nombre'];
+            $row['extension_telefono'] = $row['extension'] ?? '';
+            $row['clave_extension'] = $row['sip_password'] ?? '';
         }
         return $row ?: null;
     }
@@ -73,6 +79,8 @@ class Usuario {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
             $row['nombre_completo'] = $row['nombre'];
+            $row['extension_telefono'] = $row['extension'] ?? '';
+            $row['clave_extension'] = $row['sip_password'] ?? '';
         }
         return $row ?: null;
     }

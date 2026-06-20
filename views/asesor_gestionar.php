@@ -358,8 +358,8 @@ $fecha_min_volver_llamar = (new DateTimeImmutable('now', new DateTimeZone('Ameri
 
                 // Verificar que el usuario sea asesor Y tenga extensión y clave SIP asignadas
                 // Prioridad: extension_telefono y clave_extension (nuevos campos), luego extension y sip_password (legacy)
-                $extension_telefono = $usuario_data['extension_telefono'] ?? $usuario_data['extension'] ?? '';
-                $clave_extension = $usuario_data['clave_extension'] ?? $usuario_data['sip_password'] ?? '';
+                $extension_telefono = is_array($usuario_data) ? ($usuario_data['extension_telefono'] ?? $usuario_data['extension'] ?? '') : '';
+                $clave_extension = is_array($usuario_data) ? ($usuario_data['clave_extension'] ?? $usuario_data['sip_password'] ?? '') : '';
                 
                 $mostrar_softphone = (
                     isset($_SESSION['usuario_rol']) &&
@@ -1066,64 +1066,57 @@ $fecha_min_volver_llamar = (new DateTimeImmutable('now', new DateTimeZone('Ameri
     <!-- WebRTC Softphone Integration -->
     <?php
     if ($mostrar_softphone):
-        // Incluir configuración WebRTC
-        // IMPORTANTE: Usar require_once para evitar redefiniciones, pero forzar recarga si es necesario
         $config_path = __DIR__ . '/../config/asterisk.php';
         if (file_exists($config_path)) {
-            // Limpiar opcache si está habilitado (para desarrollo)
             if (function_exists('opcache_invalidate')) {
                 opcache_invalidate($config_path, true);
             }
             require_once $config_path;
         } else {
-            // Fallback: intentar con ruta relativa
-            require_once __DIR__ . '/../config/asterisk.php';
+            error_log('[SOFTPHONE ERROR] No se encontró config/asterisk.php');
+            $mostrar_softphone = false;
         }
-        
-        // Verificar que las constantes estén definidas
-        if (!defined('ASTERISK_SIP_DOMAIN')) {
-            error_log('[SOFTPHONE ERROR] ASTERISK_SIP_DOMAIN no está definido después de incluir config/asterisk.php');
-        }
-        if (!defined('ASTERISK_WSS_SERVER')) {
-            error_log('[SOFTPHONE ERROR] ASTERISK_WSS_SERVER no está definido después de incluir config/asterisk.php');
-        }
-        
-        $webrtc_config = getWebRTCConfig();
-        
-        // Debug: Verificar valores antes de pasarlos a JavaScript
-        error_log('[SOFTPHONE DEBUG] Configuración obtenida:');
-        error_log('  - sip_domain: ' . ($webrtc_config['sip_domain'] ?? 'NO DEFINIDO'));
-        error_log('  - wss_server: ' . ($webrtc_config['wss_server'] ?? 'NO DEFINIDO'));
 
-        // Usar datos frescos de la base de datos si están disponibles (prioridad sobre sesión)
-        // Prioridad: extension_telefono y clave_extension (nuevos campos), luego extension y sip_password (legacy)
-        $extension = $usuario_data['extension_telefono'] ?? $usuario_data['extension'] ?? $_SESSION['usuario_extension'] ?? '';
-        $sip_password = $usuario_data['clave_extension'] ?? $usuario_data['sip_password'] ?? $_SESSION['usuario_sip_password'] ?? '';
-        
-        // CRÍTICO: Limpiar la contraseña de espacios en blanco al inicio y final
+        if ($mostrar_softphone && (!defined('ASTERISK_SIP_DOMAIN') || !defined('ASTERISK_WSS_SERVER'))) {
+            error_log('[SOFTPHONE ERROR] Constantes Asterisk no definidas en config/asterisk.php');
+            $mostrar_softphone = false;
+        }
+
+        if ($mostrar_softphone):
+        $webrtc_config = getWebRTCConfig();
+
+        if (defined('ASTERISK_DEBUG_MODE') && ASTERISK_DEBUG_MODE) {
+            error_log('[SOFTPHONE DEBUG] Configuración obtenida:');
+            error_log('  - sip_domain: ' . ($webrtc_config['sip_domain'] ?? 'NO DEFINIDO'));
+            error_log('  - wss_server: ' . ($webrtc_config['wss_server'] ?? 'NO DEFINIDO'));
+        }
+
+        $extension = is_array($usuario_data)
+            ? ($usuario_data['extension_telefono'] ?? $usuario_data['extension'] ?? $_SESSION['usuario_extension'] ?? '')
+            : ($_SESSION['usuario_extension'] ?? '');
+        $sip_password = is_array($usuario_data)
+            ? ($usuario_data['clave_extension'] ?? $usuario_data['sip_password'] ?? $_SESSION['usuario_sip_password'] ?? '')
+            : ($_SESSION['usuario_sip_password'] ?? '');
         $sip_password = trim($sip_password);
-        
-        // Determinar si estamos en red local (para configuración de ICE)
-        // Por defecto, si no hay servidores STUN configurados, asumimos que es LAN
-        $is_local_network = empty($webrtc_config['iceServers']) || 
+
+        $is_local_network = empty($webrtc_config['iceServers']) ||
                            (is_array($webrtc_config['iceServers']) && count($webrtc_config['iceServers']) === 0);
-        
-        // Debug seguro: nunca registrar valores de contraseña en logs.
+
         if (defined('ASTERISK_DEBUG_MODE') && ASTERISK_DEBUG_MODE) {
             error_log('[SOFTPHONE DEBUG] Estado de credenciales SIP: ' . (!empty($sip_password) ? 'DEFINIDA' : 'VACIA'));
         }
         ?>
         <link rel="stylesheet" href="assets/css/softphone-web.css">
-        <script src="assets/js/sip.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sip.js@0.21.2/dist/sip.min.js"></script>
         <script src="assets/js/softphone-web.js"></script>
         <script>
             // Configuración del softphone
-            // DEBUG: Verificar valores desde PHP antes de crear el objeto
             <?php
-            // Debug: Verificar valores directamente desde PHP
-            error_log('[SOFTPHONE DEBUG] ASTERISK_SIP_DOMAIN definido: ' . (defined('ASTERISK_SIP_DOMAIN') ? ASTERISK_SIP_DOMAIN : 'NO DEFINIDO'));
-            error_log('[SOFTPHONE DEBUG] webrtc_config[sip_domain]: ' . ($webrtc_config['sip_domain'] ?? 'NO DEFINIDO'));
-            error_log('[SOFTPHONE DEBUG] webrtc_config[wss_server]: ' . ($webrtc_config['wss_server'] ?? 'NO DEFINIDO'));
+            if (defined('ASTERISK_DEBUG_MODE') && ASTERISK_DEBUG_MODE) {
+                error_log('[SOFTPHONE DEBUG] ASTERISK_SIP_DOMAIN definido: ' . (defined('ASTERISK_SIP_DOMAIN') ? ASTERISK_SIP_DOMAIN : 'NO DEFINIDO'));
+                error_log('[SOFTPHONE DEBUG] webrtc_config[sip_domain]: ' . ($webrtc_config['sip_domain'] ?? 'NO DEFINIDO'));
+                error_log('[SOFTPHONE DEBUG] webrtc_config[wss_server]: ' . ($webrtc_config['wss_server'] ?? 'NO DEFINIDO'));
+            }
             ?>
             const webrtcConfig = {
                 wss_server: '<?php echo $webrtc_config['wss_server']; ?>',
@@ -1284,7 +1277,10 @@ $fecha_min_volver_llamar = (new DateTimeImmutable('now', new DateTimeZone('Ameri
                 }
             }
         </script>
-    <?php endif; ?>
+    <?php
+        endif;
+    endif;
+    ?>
 
 </body>
 

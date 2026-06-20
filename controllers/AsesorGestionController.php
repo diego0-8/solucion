@@ -2233,4 +2233,38 @@ class AsesorGestionController {
             return ['success' => false, 'message' => 'Error al verificar la contraseña'];
         }
     }
+
+    /**
+     * Registra bloqueo temporal del asesor por exceso de tiempo en pausa.
+     * @return array{success: bool, message?: string}
+     */
+    public function bloquearAsesor() {
+        $asesorCedula = $this->asesorCedula();
+        if (!$asesorCedula) {
+            return ['success' => false, 'message' => 'No autorizado'];
+        }
+
+        $input = file_get_contents('php://input');
+        $datos = json_decode($input, true) ?: [];
+
+        $_SESSION['asesor_bloqueado'] = true;
+        $_SESSION['asesor_bloqueo_tipo'] = $datos['tipo_pausa'] ?? '';
+        $_SESSION['asesor_bloqueo_desde'] = time();
+
+        return ['success' => true, 'message' => 'Asesor bloqueado por exceso de tiempo en pausa'];
+    }
+
+    /**
+     * Verifica si el asesor sigue bloqueado (desbloqueo manual vía sesión).
+     * @return array{success: bool, desbloqueado: bool}
+     */
+    public function verificarEstadoBloqueo() {
+        $asesorCedula = $this->asesorCedula();
+        if (!$asesorCedula) {
+            return ['success' => false, 'desbloqueado' => false];
+        }
+
+        $bloqueado = !empty($_SESSION['asesor_bloqueado']);
+        return ['success' => true, 'desbloqueado' => !$bloqueado];
+    }
 }

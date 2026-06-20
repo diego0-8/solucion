@@ -9,7 +9,7 @@ module.exports = defineConfig({
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost/BancoW',
+    baseURL: process.env.BASE_URL || 'http://localhost/Soluciona',
     trace: 'on-first-retry',
     headless: true,
     viewport: { width: 1280, height: 720 },

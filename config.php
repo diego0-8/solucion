@@ -16,10 +16,44 @@ session_start();
 // Configuración de zona horaria
 date_default_timezone_set('America/Bogota');
 
+// Configuración local opcional (credenciales/URL en servidor; no commitear)
+if (file_exists(__DIR__ . '/config.local.php')) {
+    require_once __DIR__ . '/config.local.php';
+}
+
+/**
+ * URL pública de la app (sin barra final).
+ * Prioridad: APP_URL en entorno → config.local.php → detección automática del request.
+ */
+if (!function_exists('detectAppUrl')) {
+    function detectAppUrl() {
+        $env = getenv('APP_URL');
+        if (is_string($env) && trim($env) !== '') {
+            return rtrim(trim($env), '/');
+        }
+        if (php_sapi_name() === 'cli') {
+            return 'http://localhost/Soluciona';
+        }
+        $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string) $_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+            || (isset($_SERVER['HTTP_CF_VISITOR']) && stripos((string) $_SERVER['HTTP_CF_VISITOR'], 'https') !== false);
+        $scheme = $https ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $script = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
+        $base = rtrim(str_replace('\\', '/', dirname($script)), '/');
+        if ($base === '/' || $base === '.') {
+            $base = '';
+        }
+        return $scheme . '://' . $host . $base;
+    }
+}
+
 // Configuración de la aplicación
 define('APP_NAME', 'soluciona');
 define('APP_VERSION', '1.0.0');
-define('APP_URL', 'http://localhost/soluciona');
+if (!defined('APP_URL')) {
+    define('APP_URL', detectAppUrl());
+}
 
 // Configuración de base de datos
 define('DB_HOST', 'localhost');

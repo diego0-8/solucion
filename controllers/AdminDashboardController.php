@@ -46,11 +46,12 @@ class AdminDashboardController {
                 error_log("AdminDashboardController: Error al obtener clientes - " . $e->getMessage());
             }
             
-            // Obtener coordinadores (filtrar de usuarios)
-            $coordinadores = array_filter($usuarios, function($u) {
-                return strtolower($u['rol'] ?? '') === 'coordinador';
+            // Coordinadores activos (para selects de asignación)
+            $coordinadores = array_filter($usuarios, function ($u) {
+                return strtolower($u['rol'] ?? '') === 'coordinador'
+                    && strtolower($u['estado'] ?? '') === 'activo';
             });
-            $coordinadores = array_values($coordinadores); // Reindexar
+            $coordinadores = array_values($coordinadores);
             
             // Calcular estadísticas
             $estadisticas = $this->calcularEstadisticas($usuarios, $asignaciones, $clientes);

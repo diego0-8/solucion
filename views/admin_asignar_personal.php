@@ -502,7 +502,7 @@
             formData.append('ajax', '1');
             
             // Enviar solicitud AJAX
-            fetch('index.php?action=asignar_personal', {
+            fetch('index.php?action=crear_asignacion', {
                 method: 'POST',
                 body: formData
             })

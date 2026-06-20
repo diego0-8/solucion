@@ -1699,6 +1699,12 @@ function verClientesBase(baseId, baseNombre) {
     window._modalVerClientesBaseId = baseId;
     window._modalVerClientesBaseNombre = baseNombre;
 
+    const inputBusqueda = document.getElementById('modal-ver-clientes-busqueda');
+    if (inputBusqueda) {
+        inputBusqueda.value = '';
+    }
+    clearTimeout(_busquedaClientesModalTimeout);
+
     // Cargar clientes (con límite en servidor para bases grandes; total indica tamaño real)
     fetch(`index.php?action=obtener_clientes_base&base_id=${baseId}`)
         .then(response => {
@@ -2099,6 +2105,7 @@ function openModalVerClientes(baseId, baseNombre) {
 }
 
 function closeModalVerClientes() {
+    clearTimeout(_busquedaClientesModalTimeout);
     document.getElementById('modal-ver-clientes').style.display = 'none';
 }
 
@@ -2268,10 +2275,116 @@ function cerrarModalVerAsesores() {
 
 // Lista completa de clientes del modal "Ver clientes" (para filtrar sin volver a pedir al servidor)
 let _clientesModalVerClientes = [];
+let _clientesModalTotalEnBase = 0;
+let _modalVerClientesBusquedaInicializada = false;
+let _busquedaClientesModalTimeout = null;
+
+function _initModalVerClientesBusqueda() {
+    if (_modalVerClientesBusquedaInicializada) return;
+    const input = document.getElementById('modal-ver-clientes-busqueda');
+    if (!input) return;
+    input.addEventListener('input', _onInputBusquedaModalClientes);
+    _modalVerClientesBusquedaInicializada = true;
+}
+
+function _todosClientesModalCargados() {
+    return _clientesModalVerClientes.length === 0
+        || _clientesModalTotalEnBase <= _clientesModalVerClientes.length;
+}
+
+function _actualizarTotalClientesModal(cantidadMostrada) {
+    const totalElement = document.getElementById('modal-clientes-total');
+    if (!totalElement) return;
+    if (_clientesModalTotalEnBase > _clientesModalVerClientes.length) {
+        totalElement.textContent = 'Mostrando ' + cantidadMostrada + ' de ' + _clientesModalTotalEnBase + ' (use búsqueda para filtrar)';
+    } else if (_clientesModalVerClientes.length !== cantidadMostrada) {
+        totalElement.textContent = cantidadMostrada + ' de ' + _clientesModalVerClientes.length;
+    } else {
+        totalElement.textContent = String(cantidadMostrada);
+    }
+}
+
+function _setClientesModalLista(clientes, totalEnBase) {
+    _clientesModalVerClientes = clientes || [];
+    _clientesModalTotalEnBase = totalEnBase != null ? totalEnBase : _clientesModalVerClientes.length;
+    _renderizarClientesEnModal(_clientesModalVerClientes);
+    _actualizarTotalClientesModal(_clientesModalVerClientes.length);
+}
+
+function _filtrarClientesModalLocal(termLower) {
+    if (!termLower) {
+        _renderizarClientesEnModal(_clientesModalVerClientes);
+        _actualizarTotalClientesModal(_clientesModalVerClientes.length);
+        return;
+    }
+    const filtrados = _clientesModalVerClientes.filter(function(cliente) {
+        const cc = String(cliente.cedula || cliente.IDENTIFICACION || cliente.cc || '').toLowerCase();
+        const nombre = String(cliente.nombre || cliente['NOMBRE CONTRATANTE'] || '').toLowerCase();
+        const cels = [cliente.tel1, cliente.CELULAR, cliente.cel1, cliente.tel2, cliente.tel3, cliente.tel4, cliente.tel5]
+            .filter(Boolean)
+            .map(function(c) { return String(c).toLowerCase(); });
+        const textoBusqueda = [cc, nombre].concat(cels).join(' ');
+        return textoBusqueda.indexOf(termLower) !== -1;
+    });
+    _renderizarClientesEnModal(filtrados);
+    _actualizarTotalClientesModal(filtrados.length);
+}
+
+function _cargarClientesModalDesdeServidor(baseId, baseNombre, term) {
+    if (!baseId) return;
+    const tbody = document.getElementById('modal-clientes-tbody');
+    const url = term
+        ? 'index.php?action=obtener_clientes_base&base_id=' + baseId + '&busqueda=' + encodeURIComponent(term)
+        : 'index.php?action=obtener_clientes_base&base_id=' + baseId;
+    if (term && tbody) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</td></tr>';
+    }
+    fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success && data.clientes) {
+                const total = data.total != null ? parseInt(data.total, 10) : data.clientes.length;
+                _setClientesModalLista(data.clientes, total);
+            }
+        })
+        .catch(function() {
+            if (tbody) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center alert alert-danger">Error al buscar</td></tr>';
+            }
+        });
+}
+
+function _onInputBusquedaModalClientes() {
+    clearTimeout(_busquedaClientesModalTimeout);
+    const input = document.getElementById('modal-ver-clientes-busqueda');
+    if (!input) return;
+    const term = (input.value || '').trim();
+    const termLower = term.toLowerCase();
+    const baseId = window._modalVerClientesBaseId;
+    const baseNombre = window._modalVerClientesBaseNombre;
+
+    if (_todosClientesModalCargados() && _clientesModalVerClientes.length > 0) {
+        _filtrarClientesModalLocal(termLower);
+        return;
+    }
+
+    if (term.length < 2) {
+        if (!term) {
+            _busquedaClientesModalTimeout = setTimeout(function() {
+                _cargarClientesModalDesdeServidor(baseId, baseNombre, '');
+            }, 300);
+        }
+        return;
+    }
+
+    _busquedaClientesModalTimeout = setTimeout(function() {
+        _cargarClientesModalDesdeServidor(baseId, baseNombre, term);
+    }, 400);
+}
 
 function mostrarClientesEnModal(clientes, baseNombre, totalEnBase) {
     console.log('mostrarClientesEnModal: Mostrando clientes. Lista:', clientes?.length || 0, 'Total en base:', totalEnBase);
-    
+
     const tbody = document.getElementById('modal-clientes-tbody');
     if (!tbody) {
         console.error('mostrarClientesEnModal: Elemento modal-clientes-tbody no encontrado');
@@ -2281,80 +2394,9 @@ function mostrarClientesEnModal(clientes, baseNombre, totalEnBase) {
         }
         return;
     }
-    
-    _clientesModalVerClientes = clientes || [];
-    _clientesModalTotalEnBase = totalEnBase != null ? totalEnBase : _clientesModalVerClientes.length;
-    
-    const inputBusqueda = document.getElementById('modal-ver-clientes-busqueda');
-    if (inputBusqueda) {
-        inputBusqueda.value = '';
-        inputBusqueda.removeEventListener('input', _filtrarClientesModalHandler);
-        inputBusqueda.removeEventListener('input', _busquedaClientesModalServidor);
-        inputBusqueda.addEventListener('input', _filtrarClientesModalHandler);
-        inputBusqueda.addEventListener('input', _busquedaClientesModalServidor);
-    }
-    
-    _renderizarClientesEnModal(_clientesModalVerClientes);
-    
-    const totalElement = document.getElementById('modal-clientes-total');
-    if (totalElement) {
-        if (_clientesModalTotalEnBase > _clientesModalVerClientes.length) {
-            totalElement.textContent = 'Mostrando ' + _clientesModalVerClientes.length + ' de ' + _clientesModalTotalEnBase + ' (use búsqueda para filtrar)';
-        } else {
-            totalElement.textContent = _clientesModalVerClientes.length;
-        }
-    }
-}
 
-let _clientesModalTotalEnBase = 0;
-let _busquedaClientesModalTimeout = null;
-function _busquedaClientesModalServidor() {
-    const input = document.getElementById('modal-ver-clientes-busqueda');
-    const baseId = window._modalVerClientesBaseId;
-    const baseNombre = window._modalVerClientesBaseNombre;
-    if (!input || !baseId) return;
-    clearTimeout(_busquedaClientesModalTimeout);
-    const term = (input.value || '').trim();
-    _busquedaClientesModalTimeout = setTimeout(function() {
-        const tbody = document.getElementById('modal-clientes-tbody');
-        const url = term.length >= 2
-            ? 'index.php?action=obtener_clientes_base&base_id=' + baseId + '&busqueda=' + encodeURIComponent(term)
-            : 'index.php?action=obtener_clientes_base&base_id=' + baseId;
-        if (term.length >= 2 && tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</td></tr>';
-        fetch(url).then(function(r) { return r.json(); }).then(function(data) {
-            if (data.success && data.clientes) {
-                mostrarClientesEnModal(data.clientes, baseNombre, data.total);
-            }
-        }).catch(function() {
-            if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="text-center alert alert-danger">Error al buscar</td></tr>';
-        });
-    }, term.length >= 2 ? 400 : 0);
-}
-
-function _filtrarClientesModalHandler() {
-    const termino = (document.getElementById('modal-ver-clientes-busqueda')?.value || '').trim().toLowerCase();
-    if (!termino) {
-        _renderizarClientesEnModal(_clientesModalVerClientes);
-        const totalElement = document.getElementById('modal-clientes-total');
-        if (totalElement) totalElement.textContent = _clientesModalVerClientes.length;
-        return;
-    }
-    const filtrados = _clientesModalVerClientes.filter(cliente => {
-        const cc = String(cliente.cedula || cliente.IDENTIFICACION || cliente.cc || '').toLowerCase();
-        const nombre = String(cliente.nombre || cliente['NOMBRE CONTRATANTE'] || '').toLowerCase();
-        const cels = [cliente.tel1, cliente.CELULAR, cliente.cel1, cliente.tel2, cliente.tel3, cliente.tel4, cliente.tel5]
-            .filter(Boolean)
-            .map(c => String(c).toLowerCase());
-        const textoBusqueda = [cc, nombre, ...cels].join(' ');
-        return textoBusqueda.indexOf(termino) !== -1;
-    });
-    _renderizarClientesEnModal(filtrados);
-    const totalElement = document.getElementById('modal-clientes-total');
-    if (totalElement) {
-        totalElement.textContent = _clientesModalVerClientes.length !== filtrados.length
-            ? (filtrados.length + ' de ' + _clientesModalVerClientes.length)
-            : filtrados.length;
-    }
+    _setClientesModalLista(clientes, totalEnBase);
+    _initModalVerClientesBusqueda();
 }
 
 function _renderizarClientesEnModal(clientes) {

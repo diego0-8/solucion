@@ -342,7 +342,6 @@ class CoordGestionController {
     public function cargarCsv() {
         @set_time_limit(300);
         @ini_set('memory_limit', '256M');
-        @file_put_contents(dirname(__DIR__) . '/log_carga_diagnostico.txt', date('c') . " CoordGestionController::cargarCsv entrada\n", FILE_APPEND);
 
         $tipoCarga = $_POST['tipo_carga'] ?? '';
         $nombreArchivo = trim($_POST['nombre_archivo'] ?? '');
@@ -462,6 +461,12 @@ class CoordGestionController {
                 $errores[] = "Fila $numRow: cedula y operación deben ser numéricos (cedula=\"$cedula\", operacion=\"$operacion\").";
                 continue;
             }
+            if (strlen($cedulaNum) > 10) {
+                $errores[] = "Fila $numRow: la cédula excede 10 dígitos (máximo en BD). Valor: \"$cedulaNum\".";
+                continue;
+            }
+            $cedula = $cedulaNum;
+            $operacion = $operacionNum;
             $procesadas++;
 
             // Preparar datos del cliente (campos NOT NULL: nombre, email, ciudad deben tener valor)
@@ -520,6 +525,9 @@ class CoordGestionController {
             // Por eso el upsert debe hacerse por (operacion + base_id), no por operacion global.
             $existeOblig = $obligacionModel->obtenerPorOperacionYBase($operacion, $baseId);
             if ($existeOblig) {
+                if ((int) ($existeOblig['cliente_id'] ?? 0) !== (int) $idCliente) {
+                    $errores[] = "Fila $numRow: operación $operacion reasignada de cliente_id {$existeOblig['cliente_id']} a $idCliente (cédula $cedula).";
+                }
                 if ($obligacionModel->actualizarPorOperacionYBase($operacion, $baseId, $obligData)) {
                     $obligacionesActualizadas++;
                 }
@@ -546,7 +554,6 @@ class CoordGestionController {
         if (count($errores) > 0) {
             $mensaje .= ' Errores: ' . count($errores);
         }
-        @file_put_contents(dirname(__DIR__) . '/log_carga_diagnostico.txt', date('c') . " CoordGestionController::cargarCsv retorno OK\n", FILE_APPEND);
         return [
             'success' => true,
             'mensaje' => $mensaje,
@@ -1909,27 +1916,24 @@ class CoordGestionController {
     }
 
     /**
-     * Descarga la plantilla CSV (mismo formato que la exportación Soluciona usada en Carga de archivo).
-     * Archivo: plantillas/plantilla_carga_clientes.csv (encabezados + fila de ejemplo).
+     * Descarga la plantilla CSV de carga de clientes/obligaciones (formato Soluciona).
      * @return void
      */
     public function descargarPlantilla() {
         try {
-            $rutaPlantilla = dirname(__DIR__) . '/plantillas/plantilla_carga_clientes.csv';
-            if (!is_readable($rutaPlantilla)) {
-                $this->regenerarPlantillaCargaCsv($rutaPlantilla);
-            }
-            if (!is_readable($rutaPlantilla)) {
+            require_once dirname(__DIR__) . '/helpers/CsvCargaHelper.php';
+            $headers = CsvCargaHelper::encabezadosPlantillaCargaSoluciona();
+            $validacion = CsvCargaHelper::validarPlantillaCargaSoluciona($headers);
+            if (!$validacion['valido']) {
                 header('Content-Type: application/json; charset=utf-8');
-                echo json_encode(['success' => false, 'message' => 'No se encontró la plantilla de carga. Contacte al administrador.']);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Plantilla inválida: ' . implode(' ', $validacion['errores']),
+                ]);
                 exit;
             }
-
-            header('Content-Type: text/csv; charset=utf-8');
-            header('Content-Disposition: attachment; filename="plantilla_carga_clientes.csv"');
-            header('Content-Length: ' . filesize($rutaPlantilla));
-            readfile($rutaPlantilla);
-            exit;
+            $ejemplo = CsvCargaHelper::filaEjemploPlantillaCargaSoluciona();
+            CsvCargaHelper::enviarCsvDescarga($headers, [$ejemplo], 'plantilla_carga_clientes.csv', ';');
         } catch (Exception $e) {
             error_log("CoordGestionController::descargarPlantilla - " . $e->getMessage());
             header('Content-Type: application/json; charset=utf-8');
@@ -1939,7 +1943,80 @@ class CoordGestionController {
     }
 
     /**
+     * Columnas del CSV de reporte de gestiones (mismo formato que generarReporteGestiones).
+     *
+     * @return array<int,string>
+     */
+    private function columnasReporteGestionesCsv() {
+        $columnas = [
+            'fecha de gestion',
+            'asesor',
+            'operacion',
+            'cedula del cliente',
+            'cliente',
+            'telefono de contacto',
+            'base',
+            'canal de contacto',
+            'nivel1',
+            'nivel2',
+            'fecha de pago',
+            'descuento aplicado',
+            'valor de pago',
+            'estado de aprovacion',
+            'cuota',
+        ];
+        for ($i = 1; $i <= Acuerdo::MAX_PAGO_COLUMNAS_ANCHO; $i++) {
+            $columnas[] = 'pago ' . $i;
+            $columnas[] = 'fecha ' . $i;
+        }
+        $columnas[] = 'duracion';
+        $columnas[] = 'observaciones';
+        return $columnas;
+    }
+
+    /**
+     * Descarga plantilla vacía del reporte de gestiones (encabezados + fila de referencia).
+     * @return void
+     */
+    public function descargarPlantillaReporteGestiones() {
+        try {
+            $coordinadorCedula = $this->coordinadorCedula();
+            if (!$coordinadorCedula) {
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode(['success' => false, 'message' => 'No autorizado']);
+                exit;
+            }
+            require_once dirname(__DIR__) . '/helpers/CsvCargaHelper.php';
+            $headers = $this->columnasReporteGestionesCsv();
+            $ejemplo = array_fill(0, count($headers), '');
+            $mapa = array_flip($headers);
+            if (isset($mapa['fecha de gestion'])) {
+                $ejemplo[$mapa['fecha de gestion']] = date('d/m/Y H:i:s');
+            }
+            if (isset($mapa['asesor'])) {
+                $ejemplo[$mapa['asesor']] = 'Nombre Asesor';
+            }
+            if (isset($mapa['operacion'])) {
+                $ejemplo[$mapa['operacion']] = '123456789';
+            }
+            if (isset($mapa['cedula del cliente'])) {
+                $ejemplo[$mapa['cedula del cliente']] = '1012345678';
+            }
+            if (isset($mapa['cliente'])) {
+                $ejemplo[$mapa['cliente']] = 'Cliente Ejemplo';
+            }
+            CsvCargaHelper::enviarCsvDescarga($headers, [$ejemplo], 'plantilla_reporte_gestiones.csv', ',');
+        } catch (Exception $e) {
+            error_log("CoordGestionController::descargarPlantillaReporteGestiones - " . $e->getMessage());
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    /**
      * Genera plantillas/plantilla_carga_clientes.csv desde datos 1.csv si existe en el proyecto.
+     * @deprecated La plantilla se genera en memoria en descargarPlantilla()
      */
     private function regenerarPlantillaCargaCsv($rutaDestino) {
         require_once dirname(__DIR__) . '/helpers/CsvCargaHelper.php';
@@ -2076,8 +2153,8 @@ class CoordGestionController {
             }
             $db = getDBConnection();
             $asignacionModel = new Asignacion();
-            $asignaciones = $asignacionModel->obtenerPorCoordinador($coordinadorCedula);
-            $asesoresCedulas = array_column($asignaciones, 'asesor_cedula');
+            // Reporte histórico: incluir gestiones aunque el asesor o la base estén deshabilitados.
+            $asesoresCedulas = $asignacionModel->obtenerAsesoresCedulasPorCoordinadorParaReporte($coordinadorCedula);
             if (empty($asesoresCedulas)) {
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => 'No tiene asesores asignados.']);
@@ -2177,29 +2254,7 @@ class CoordGestionController {
             header('Content-Disposition: attachment; filename="reporte_gestiones_' . $fechaInicio . '_' . $fechaFin . '.csv"');
             $output = fopen('php://output', 'w');
             fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
-            $columnas = [
-                'fecha de gestion',
-                'asesor',
-                'operacion',
-                'cedula del cliente',
-                'cliente',
-                'telefono de contacto',
-                'base',
-                'canal de contacto',
-                'nivel1',
-                'nivel2',
-                'fecha de pago',
-                'descuento aplicado',
-                'valor de pago',
-                'estado de aprovacion',
-                'cuota',
-            ];
-            for ($i = 1; $i <= Acuerdo::MAX_PAGO_COLUMNAS_ANCHO; $i++) {
-                $columnas[] = 'pago ' . $i;
-                $columnas[] = 'fecha ' . $i;
-            }
-            $columnas[] = 'duracion';
-            $columnas[] = 'observaciones';
+            $columnas = $this->columnasReporteGestionesCsv();
             fputcsv($output, $columnas);
             // Streaming: escribir fila a fila sin cargar todo en memoria (soporta millones de registros)
             while (($r = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
@@ -2275,8 +2330,7 @@ class CoordGestionController {
             }
             $db = getDBConnection();
             $asignacionModel = new Asignacion();
-            $asignaciones = $asignacionModel->obtenerPorCoordinador($coordinadorCedula);
-            $asesoresCedulas = array_column($asignaciones, 'asesor_cedula');
+            $asesoresCedulas = $asignacionModel->obtenerAsesoresCedulasPorCoordinadorParaReporte($coordinadorCedula);
             if (empty($asesoresCedulas)) {
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => 'No tiene asesores asignados.']);
@@ -2287,7 +2341,7 @@ class CoordGestionController {
                 SELECT t.id_tiempo, t.asesor_cedula, t.fecha, t.tipo_registro, t.hora_inicio, t.hora_fin, t.estado,
                        u.nombre AS asesor_nombre
                 FROM tiempos t
-                INNER JOIN usuarios u ON u.cedula = t.asesor_cedula
+                LEFT JOIN usuarios u ON u.cedula = t.asesor_cedula
                 WHERE t.asesor_cedula IN ($placeholders)
                   AND t.fecha >= ?
                   AND t.fecha <= ?

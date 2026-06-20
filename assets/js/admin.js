@@ -170,7 +170,7 @@ function asignarPersonalSubmit(event) {
     mostrarLoading(formulario);
     
     // Enviar petición
-    hacerPeticion('index.php?action=asignar_personal', {
+    hacerPeticion('index.php?action=crear_asignacion', {
         method: 'POST',
         body: new URLSearchParams(formData)
     })

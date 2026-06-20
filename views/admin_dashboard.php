@@ -1,4 +1,19 @@
 <?php require_once __DIR__ . '/../config.php'; ?>
+<?php
+// Valores por defecto (index.php los sobrescribe al cargar el dashboard)
+if (!isset($usuarios) || !is_array($usuarios)) {
+    $usuarios = [];
+}
+if (!isset($asignaciones) || !is_array($asignaciones)) {
+    $asignaciones = [];
+}
+if (!isset($estadisticas) || !is_array($estadisticas)) {
+    $estadisticas = [];
+}
+if (!isset($coordinadores) || !is_array($coordinadores)) {
+    $coordinadores = [];
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -40,10 +55,10 @@
                     <button class="media-button" onclick="openModal('asignar-personal')">
                         <i class="fas fa-user-friends"></i> Asignar Personal
                     </button>
-                    <button class="media-button" onclick="openModal('cargar-clientes')">
+                    <button class="media-button" onclick="window.location.href='index.php?action=admin_reportes'">
                         <i class="fas fa-upload"></i> Cargar Clientes
                     </button>
-                    <button class="media-button" onclick="openModal('generar-reporte')">
+                    <button class="media-button" onclick="window.location.href='index.php?action=admin_reportes'">
                         <i class="fas fa-file-alt"></i> Generar Reporte
                     </button>
                 </div>
@@ -422,14 +437,18 @@
                                 <div class="stat-item">
                                     <i class="fas fa-user-check"></i>
                                     <div>
-                                        <span class="stat-number"><?php echo count(array_filter($asignaciones, function($a) { return $a['estado'] === 'activa'; })); ?></span>
+                                        <span class="stat-number"><?php echo count(array_filter($asignaciones, function ($a) {
+                                            return strtolower(trim((string) ($a['estado'] ?? 'activa'))) === 'activa';
+                                        })); ?></span>
                                         <span class="stat-label">Activas</span>
                                     </div>
                                 </div>
                                 <div class="stat-item">
                                     <i class="fas fa-user-times"></i>
                                     <div>
-                                        <span class="stat-number"><?php echo count(array_filter($asignaciones, function($a) { return $a['estado'] === 'inactiva'; })); ?></span>
+                                        <span class="stat-number"><?php echo count(array_filter($asignaciones, function ($a) {
+                                            return strtolower(trim((string) ($a['estado'] ?? ''))) === 'inactiva';
+                                        })); ?></span>
                                         <span class="stat-label">Inactivas</span>
                                     </div>
                                 </div>
@@ -656,7 +675,12 @@
                         <select id="asesor_cedula" name="asesor_cedula" required>
                             <option value="">Seleccionar asesor</option>
                             <?php foreach ($estadisticas['asesores_sin_coordinador'] ?? [] as $asesor): ?>
-                                <option value="<?php echo $asesor['cedula']; ?>"><?php echo $asesor['nombre_completo']; ?> (<?php echo $asesor['usuario']; ?>)</option>
+                                <option value="<?php echo htmlspecialchars($asesor['cedula'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                    <?php echo htmlspecialchars($asesor['nombre_completo'] ?? $asesor['nombre'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                    <?php if (!empty($asesor['usuario'])): ?>
+                                        (<?php echo htmlspecialchars($asesor['usuario'], ENT_QUOTES, 'UTF-8'); ?>)
+                                    <?php endif; ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                         <small>Seleccione un asesor que no tenga coordinador asignado</small>
@@ -665,9 +689,18 @@
                         <label for="coordinador_cedula">Coordinador *</label>
                         <select id="coordinador_cedula" name="coordinador_cedula" required>
                             <option value="">Seleccionar coordinador</option>
-                            <?php foreach ($coordinadores as $coord): ?>
-                                <option value="<?php echo $coord['cedula']; ?>"><?php echo $coord['nombre_completo']; ?> (<?php echo $coord['usuario']; ?>)</option>
-                            <?php endforeach; ?>
+                            <?php if (empty($coordinadores)): ?>
+                                <option value="" disabled>No hay coordinadores activos</option>
+                            <?php else: ?>
+                                <?php foreach ($coordinadores as $coord): ?>
+                                    <option value="<?php echo htmlspecialchars($coord['cedula'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                        <?php echo htmlspecialchars($coord['nombre_completo'] ?? $coord['nombre'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                        <?php if (!empty($coord['usuario'])): ?>
+                                            (<?php echo htmlspecialchars($coord['usuario'], ENT_QUOTES, 'UTF-8'); ?>)
+                                        <?php endif; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
                         <small>Seleccione el coordinador que supervisará al asesor</small>
                     </div>
@@ -699,11 +732,20 @@
                     </div>
                     <div class="form-group">
                         <label for="coordinador_id">Asignar a Coordinador</label>
-                        <select id="coordinador_id" name="coordinador_id" required>
+                        <select id="coordinador_id" name="coordinador_cedula" required>
                             <option value="">Seleccionar coordinador</option>
-                            <?php foreach ($coordinadores as $coord): ?>
-                                <option value="<?php echo $coord['id']; ?>"><?php echo $coord['nombre_completo']; ?></option>
-                            <?php endforeach; ?>
+                            <?php if (empty($coordinadores)): ?>
+                                <option value="" disabled>No hay coordinadores activos</option>
+                            <?php else: ?>
+                                <?php foreach ($coordinadores as $coord): ?>
+                                    <option value="<?php echo htmlspecialchars($coord['cedula'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                        <?php echo htmlspecialchars($coord['nombre_completo'] ?? $coord['nombre'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                        <?php if (!empty($coord['usuario'])): ?>
+                                            (<?php echo htmlspecialchars($coord['usuario'], ENT_QUOTES, 'UTF-8'); ?>)
+                                        <?php endif; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
                     </div>
                     <div class="form-actions">
@@ -1037,109 +1079,16 @@
             });
         }
         
-        // Función para cargar clientes (específica de esta vista)
+        // Función para cargar clientes (redirige a la vista de reportes con carga CSV)
         function cargarClientes(event) {
             event.preventDefault();
-            const form = document.getElementById('form-cargar-clientes');
-            const btnCargar = document.getElementById('btn-cargar-clientes');
-            const fileInput = document.getElementById('archivo');
-            
-            if (!validateForm('form-cargar-clientes')) {
-                return;
-            }
-            
-            if (!fileInput.files[0]) {
-                mostrarAlertaCargar('Por favor seleccione un archivo', 'error', 'cargar-clientes');
-                return;
-            }
-            
-            btnCargar.disabled = true;
-            btnCargar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
-            
-            const formData = new FormData(form);
-            fetch('index.php?action=cargar_clientes', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    return response.text().then(text => {
-                        throw new Error('Respuesta no es JSON: ' + text.substring(0, 100));
-                    });
-                }
-                return response.json();
-            })
-            .then(result => {
-                if (result.success) {
-                    mostrarAlertaCargar(result.message, 'success', 'cargar-clientes');
-                    form.reset();
-                    setTimeout(() => {
-                        if (typeof closeModal === 'function') {
-                            closeModal('cargar-clientes');
-                        }
-                        location.reload();
-                    }, 2000);
-                } else {
-                    mostrarAlertaCargar(result.message, 'error', 'cargar-clientes');
-                }
-            })
-            .catch(error => {
-                mostrarAlertaCargar('Error de conexión: ' + error.message, 'error', 'cargar-clientes');
-            })
-            .finally(() => {
-                btnCargar.disabled = false;
-                btnCargar.innerHTML = '<i class="fas fa-upload"></i> Cargar Clientes';
-            });
+            window.location.href = 'index.php?action=admin_reportes';
         }
         
-        // Función para generar reportes (específica de esta vista)
+        // Función para generar reportes (redirige a la vista de reportes)
         function generarReporte(event) {
             event.preventDefault();
-            const form = document.getElementById('form-generar-reporte');
-            const btnGenerar = document.getElementById('btn-generar-reporte');
-            
-            if (!validateForm('form-generar-reporte')) {
-                return;
-            }
-            
-            btnGenerar.disabled = true;
-            btnGenerar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-            
-            const formData = new FormData(form);
-            fetch('index.php?action=generar_reporte', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    return response.text().then(text => {
-                        throw new Error('Respuesta no es JSON: ' + text.substring(0, 100));
-                    });
-                }
-                return response.json();
-            })
-            .then(result => {
-                if (result.success) {
-                    mostrarAlertaReporte(result.message, 'success', 'generar-reporte');
-                    form.reset();
-                    setTimeout(() => {
-                        if (typeof closeModal === 'function') {
-                            closeModal('generar-reporte');
-                        }
-                    }, 2000);
-                } else {
-                    mostrarAlertaReporte(result.message, 'error', 'generar-reporte');
-                }
-            })
-            .catch(error => {
-                mostrarAlertaReporte('Error de conexión: ' + error.message, 'error', 'generar-reporte');
-            })
-            .finally(() => {
-                btnGenerar.disabled = false;
-                btnGenerar.innerHTML = '<i class="fas fa-file-alt"></i> Generar Reporte';
-            });
+            window.location.href = 'index.php?action=admin_reportes';
         }
         
         // Función para liberar asignación (específica de esta vista)

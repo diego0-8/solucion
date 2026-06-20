@@ -155,6 +155,14 @@ function seleccionarRango(rango) {
 }
 
 // =========================================
+// DESCARGA DE PLANTILLA CSV (columna izquierda)
+// =========================================
+
+function descargarPlantillaReporte() {
+    window.location.href = 'index.php?action=descargar_plantilla_reporte';
+}
+
+// =========================================
 // FUNCIÓN DE GENERACIÓN DE REPORTE
 // =========================================
 

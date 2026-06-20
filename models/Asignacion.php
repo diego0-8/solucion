@@ -211,4 +211,23 @@ class Asignacion {
         $stmt->execute([$coordinadorCedula]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Cédulas de asesores del coordinador para reportes históricos (activas e inactivas).
+     * Incluye asesores deshabilitados o con asignación inactiva: el reporte debe traer toda la gestión.
+     *
+     * @param string $coordinadorCedula
+     * @return array<int, string>
+     */
+    public function obtenerAsesoresCedulasPorCoordinadorParaReporte($coordinadorCedula) {
+        $stmt = $this->db->prepare("
+            SELECT DISTINCT a.asesor_cedula
+            FROM asignaciones a
+            WHERE a.coordinador_cedula = ?
+              AND a.asesor_cedula IS NOT NULL
+              AND TRIM(a.asesor_cedula) != ''
+        ");
+        $stmt->execute([$coordinadorCedula]);
+        return array_values(array_filter(array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'asesor_cedula')));
+    }
 }

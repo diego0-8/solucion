@@ -199,7 +199,7 @@ class CsvCargaHelper {
     public static function mapearEncabezados(array $headers) {
         $aliases = [
             'operacion' => ['no operacion', 'no de operacion', 'numero operacion', 'operacion', 'operación'],
-            'cuenta' => ['cuenta cliente carteras', 'cuenta cliente', 'cuenta cleinte', 'cuenta'],
+            'cuenta' => ['cuenta cliente carteras', 'cuenta cliente', 'cuenta cleinte', 'cuenta', 'cuenta cliente'],
             'ident_credito' => ['ident credito', 'ident. credito', 'identificacion credito'],
             'tipo_cliente' => ['tipo cliente'],
             'dueno_cartera' => ['dueno cartera', 'dueño cartera'],
@@ -237,7 +237,7 @@ class CsvCargaHelper {
             'email_3' => ['email 3', 'email3'],
             'email_4' => ['email 4', 'email4'],
             'email_5' => ['email 5', 'email5'],
-            'años_castigo' => ['fecha castigo', 'fecha de castigo', 'año de castigo', 'anos castigo', 'ano castigo', 'anos de castigo', 'años castigo'],
+            'años_castigo' => ['fecha castigo', 'fecha de castigo', 'año de castigo', 'anos castigo', 'ano castigo', 'anos de castigo', 'años castigo', 'ano castigo', 'año castigo'],
             'concepto_mes_actual' => ['concepto mes actual', 'etapa del proceso judicial'],
             'estado_proceso_juridico' => ['judicializacion', 'estado proceso juridico', 'estado proceso jurídico'],
             'total' => ['saldo capital', 'total'],
@@ -429,5 +429,154 @@ class CsvCargaHelper {
             'total' => $saldoCapital,
             'total_a_pagar' => $totalObligacion,
         ];
+    }
+
+    /**
+     * Valida que los encabezados de la plantilla permitan mapear operación y cédula.
+     *
+     * @param array<int,string> $headers
+     * @return array{valido: bool, errores: array<int,string>, mapa: array<string,int>}
+     */
+    public static function validarPlantillaCargaSoluciona(array $headers) {
+        $map = self::mapearEncabezados($headers);
+        $errores = [];
+        if (!isset($map['operacion'])) {
+            $errores[] = 'Falta columna de operación (ej. No. Operación).';
+        }
+        if (!isset($map['cedula'])) {
+            $errores[] = 'Falta columna de identificación (ej. Identificación).';
+        }
+        return [
+            'valido' => $errores === [],
+            'errores' => $errores,
+            'mapa' => $map,
+        ];
+    }
+
+    /**
+     * Encabezados oficiales de la plantilla CSV de carga (formato exportación Soluciona).
+     * Deben coincidir con los alias de mapearEncabezados().
+     *
+     * @return array<int,string>
+     */
+    public static function encabezadosPlantillaCargaSoluciona() {
+        $headers = [
+            'No. Operación',
+            'Cuenta Cliente Carteras',
+            'Ident. Crédito',
+            'Tipo Cliente',
+            'Dueño Cartera',
+            'Cartera',
+            'Compra',
+            'Oficina',
+            'Tipo Producto',
+            'Valor Desembolso',
+            'Saldo Capital',
+            'Saldo de Capital Actual',
+            'Intereses Corrientes',
+            'Intereses de Mora',
+            'Seguros',
+            'Otros Conceptos',
+            'Total Obligación',
+            'Valor Cuota',
+            'Reestructurado',
+            'Tasa',
+            'Cuotas Pactadas',
+            'Cuotas Pagadas',
+            'Cuotas Restantes',
+            'Fecha Desembolso',
+            'Fecha Inicio Mora',
+            'Fecha Vencimiento Final',
+            'Fecha Castigo',
+            'Fecha Último Pago',
+            'Fecha Días Mora',
+            'Ciudad Origen Crédito',
+            'Identificación',
+            'Nombre Cliente',
+            'Ciudad',
+            'Sector',
+        ];
+        for ($i = 1; $i <= 5; $i++) {
+            $headers[] = 'Email ' . $i;
+        }
+        for ($i = 1; $i <= 7; $i++) {
+            $headers[] = 'Celular ' . $i;
+        }
+        for ($i = 1; $i <= 3; $i++) {
+            $headers[] = 'Teléfono ' . $i;
+        }
+        $headers[] = 'Judicialización';
+        return $headers;
+    }
+
+    /**
+     * Fila de ejemplo para la plantilla de carga (campos obligatorios: No. Operación e Identificación).
+     *
+     * @return array<int,string>
+     */
+    public static function filaEjemploPlantillaCargaSoluciona() {
+        $headers = self::encabezadosPlantillaCargaSoluciona();
+        $ejemplo = array_fill(0, count($headers), '');
+        $mapa = array_flip($headers);
+        if (isset($mapa['No. Operación'])) {
+            $ejemplo[$mapa['No. Operación']] = '123456789';
+        }
+        if (isset($mapa['Cuenta Cliente Carteras'])) {
+            $ejemplo[$mapa['Cuenta Cliente Carteras']] = '987654321';
+        }
+        if (isset($mapa['Identificación'])) {
+            $ejemplo[$mapa['Identificación']] = '1012345678';
+        }
+        if (isset($mapa['Nombre Cliente'])) {
+            $ejemplo[$mapa['Nombre Cliente']] = 'Cliente Ejemplo';
+        }
+        if (isset($mapa['Ciudad'])) {
+            $ejemplo[$mapa['Ciudad']] = 'Bogotá';
+        }
+        if (isset($mapa['Celular 1'])) {
+            $ejemplo[$mapa['Celular 1']] = '3001234567';
+        }
+        if (isset($mapa['Email 1'])) {
+            $ejemplo[$mapa['Email 1']] = 'cliente@ejemplo.com';
+        }
+        if (isset($mapa['Saldo Capital'])) {
+            $ejemplo[$mapa['Saldo Capital']] = '1500000';
+        }
+        if (isset($mapa['Total Obligación'])) {
+            $ejemplo[$mapa['Total Obligación']] = '1800000';
+        }
+        if (isset($mapa['Fecha Castigo'])) {
+            $ejemplo[$mapa['Fecha Castigo']] = '15/03/2020';
+        }
+        if (isset($mapa['Tipo Producto'])) {
+            $ejemplo[$mapa['Tipo Producto']] = 'Consumo';
+        }
+        if (isset($mapa['Judicialización'])) {
+            $ejemplo[$mapa['Judicialización']] = 'No';
+        }
+        return $ejemplo;
+    }
+
+    /**
+     * Envía un CSV al navegador (UTF-8 con BOM).
+     *
+     * @param array<int,string> $headers
+     * @param array<int,array<int,string>> $rows
+     * @param string $nombreArchivo
+     * @param string $separador
+     */
+    public static function enviarCsvDescarga(array $headers, array $rows, $nombreArchivo, $separador = ';') {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $nombreArchivo . '"');
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+
+        $output = fopen('php://output', 'w');
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        fputcsv($output, $headers, $separador, '"', '\\');
+        foreach ($rows as $row) {
+            fputcsv($output, $row, $separador, '"', '\\');
+        }
+        fclose($output);
+        exit;
     }
 }

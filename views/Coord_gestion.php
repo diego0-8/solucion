@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/../config.php'; ?>
+<?php require_once __DIR__ . '/../helpers/CsvCargaHelper.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -297,7 +298,7 @@
                             <div class="form-section">
                                 <h4>Subir Archivo CSV</h4>
                                 <p class="upload-hint" style="margin: 0 0 16px; font-size: 13px; color: #666;">
-                                    Use el mismo formato que la exportación Soluciona (plantilla descargable). Separador recomendado: punto y coma (;). Campos obligatorios por fila: <strong>No. Operación</strong> e <strong>Identificación</strong>.
+                                    Use el mismo formato que la plantilla descargable (botón <strong>Descargar Plantilla</strong>). Separador: <strong>punto y coma (;)</strong> — ya viene seleccionado abajo. Deje marcado <strong>El archivo tiene encabezados</strong>. Campos obligatorios por fila: <strong>No. Operación</strong> e <strong>Identificación</strong> (numéricos). La misma plantilla sirve para <strong>carga nueva</strong> y <strong>carga existente</strong>; reemplace la fila de ejemplo con sus datos.
                                 </p>
                                 
                                 <!-- Selección de Tipo de Carga -->
@@ -560,9 +561,10 @@
                     <h4>Formato de la plantilla</h4>
                     <ul>
                         <li>Separador: punto y coma (;)</li>
-                        <li>Primera fila: encabezados (121 columnas)</li>
-                        <li>Segunda fila: ejemplo de referencia</li>
+                        <li>Primera fila: encabezados (<?php echo count(CsvCargaHelper::encabezadosPlantillaCargaSoluciona()); ?> columnas)</li>
+                        <li>Segunda fila: ejemplo de referencia (bórrela o sustitúyala por sus datos)</li>
                         <li><strong>Obligatorios:</strong> No. Operación, Identificación</li>
+                        <li>Válida para carga nueva y carga existente en la pestaña Carga de archivo</li>
                         <li>Incluye clientes, obligaciones, teléfonos (Celular 1–7, Teléfono 1–3), correos (Email 1–5), montos y judicialización</li>
                     </ul>
                 </div>
