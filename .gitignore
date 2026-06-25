@@ -1,0 +1,19 @@
+# Datos y diagnósticos locales
+carga.-1-csv.csv
+log_carga_diagnostico.txt
+*.log
+debug-*.log
+
+# Assets locales / no versionar
+img/
+
+# Scripts de diagnóstico y pruebas locales
+scripts/
+
+# Entorno local
+config.local.php
+.env
+.cursor/
+
+# Dependencias
+node_modules/

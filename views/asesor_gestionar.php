@@ -1106,9 +1106,13 @@ $fecha_min_volver_llamar = (new DateTimeImmutable('now', new DateTimeZone('Ameri
             error_log('[SOFTPHONE DEBUG] Estado de credenciales SIP: ' . (!empty($sip_password) ? 'DEFINIDA' : 'VACIA'));
         }
         ?>
-        <link rel="stylesheet" href="assets/css/softphone-web.css">
-        <script src="https://cdn.jsdelivr.net/npm/sip.js@0.21.2/dist/sip.min.js"></script>
-        <script src="assets/js/softphone-web.js"></script>
+        <?php
+        $v_softphone_css = @filemtime(__DIR__ . '/../assets/css/softphone-web.css') ?: (defined('APP_VERSION') ? APP_VERSION : time());
+        $v_softphone_js = @filemtime(__DIR__ . '/../assets/js/softphone-web.js') ?: (defined('APP_VERSION') ? APP_VERSION : time());
+        ?>
+        <link rel="stylesheet" href="assets/css/softphone-web.css?v=<?php echo urlencode((string) $v_softphone_css); ?>">
+        <script src="https://github.com/onsip/SIP.js/releases/download/0.21.2/sip-0.21.2.min.js"></script>
+        <script src="assets/js/softphone-web.js?v=<?php echo urlencode((string) $v_softphone_js); ?>"></script>
         <script>
             // Configuración del softphone
             <?php

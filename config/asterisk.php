@@ -29,11 +29,11 @@ define('ASTERISK_WSS_PORT', '8089');
 // Ruta del WebSocket (Estándar en Issabel/Asterisk es /ws)
 define('ASTERISK_WSS_PATH', '/ws');
 
-// Servidores STUN --stun.alphacron.de:3478 % stun.l.google.com:19302
-define('ASTERISK_STUN_SERVER', 'stun.alphacron.de:3478');
+// Servidores STUN. El navegador exige el esquema stun: en RTCPeerConnection.
+define('ASTERISK_STUN_SERVER', 'stun:stun.alphacron.de:3478');
 
-// Modo debug (desactivado por seguridad; habilitar por entorno cuando sea necesario)
-define('ASTERISK_DEBUG_MODE', false);
+// Modo Debug 
+define('ASTERISK_DEBUG_MODE', true);
 
 /**
  * Retorna la configuración de WebRTC como array para el Frontend
@@ -54,7 +54,7 @@ function getWebRTCConfig()
             ['urls' => ASTERISK_STUN_SERVER]
         ],
         'debug_mode' => ASTERISK_DEBUG_MODE,
-        'trace_sip' => ASTERISK_DEBUG_MODE
+        'trace_sip' => true
     ];
 }
 ?>
